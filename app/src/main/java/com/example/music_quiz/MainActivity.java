@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.protocol.types.ListItem;
 import com.spotify.protocol.types.Track;
 
 
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String REDIRECT_URI = "app://music.quiz";
     private SpotifyAppRemote mSpotifyAppRemote;
     private Track song;
+    private String playlistUri;
 
 
     @Override
@@ -56,22 +58,36 @@ public class MainActivity extends AppCompatActivity {
     private void connected() {
 
         //Play on phone
-//        mSpotifyAppRemote.getConnectApi().connectSwitchToLocalDevice();
+        mSpotifyAppRemote.getConnectApi().connectSwitchToLocalDevice();
+        mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
+                .setResultCallback(playlistRecommendations -> {
+                    final ListItem recentlyPlayedPlaylists = playlistRecommendations.items[0];
+                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(recentlyPlayedPlaylists, 5, 0)
+                        .setResultCallback(playlists->{
+                            final ListItem lastPlaylist = playlists.items[0];
+                            this.playlistUri = lastPlaylist.uri;
+                        });
+        });
         //Shuffle playlist
         mSpotifyAppRemote.getPlayerApi().setShuffle(true);
+        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerContext()
+                .setEventCallback(playerContext -> {
+                    final String playlist = playerContext.title;
+                });
         mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
                 .setEventCallback(playerState->{
              final Track track = playerState.track;
             if(track!=null){
                 this.song = track;
+                //Update answer button to song title
+                Button answer1_button = (Button)findViewById(R.id.answer1);
+                answer1_button.setText(song.name);
             }
         });
         // Play
-        mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:4MKj7uOwJYPuj1zJXL3qBr");
+        mSpotifyAppRemote.getPlayerApi().play(this.playlistUri);
 
-        //Update answer button to song title
-        Button answer1_button = (Button)findViewById(R.id.answer1);
-        answer1_button.setText(song.name);
+
 
 
     }
@@ -79,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        mSpotifyAppRemote.getPlayerApi().pause();
             SpotifyAppRemote.disconnect(mSpotifyAppRemote);
         }
 
