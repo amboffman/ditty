@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -15,10 +16,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String CLIENT_ID = "afca0c6d0ea04e77b84465e4c5d9f2f3";
     private static final String REDIRECT_URI = "app://music.quiz";
     private SpotifyAppRemote mSpotifyAppRemote;
+    private String song;
     private String playlistUri;
     private ArrayList<String> answers = new ArrayList<String>();
 
@@ -26,6 +28,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button answer0_button = (Button)findViewById(R.id.answer0);
+        answer0_button.setOnClickListener(this);
+
+        Button answer1_button = (Button)findViewById(R.id.answer1);
+        answer1_button.setOnClickListener(this);
+
+        Button answer2_button = (Button)findViewById(R.id.answer2);
+        answer2_button.setOnClickListener(this);
+
+       Button answer3_button = (Button)findViewById(R.id.answer3);
+       answer3_button.setOnClickListener(this);
     }
     @Override
     protected void onStart() {
@@ -78,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 .setEventCallback(playerState -> {
                     if(!answers.contains(playerState.track.name)) {
                         answers.add(playerState.track.name);
+                        song = playerState.track.name;
                         if(answers.size() < 4){
                             mSpotifyAppRemote.getPlayerApi().skipNext();
                         }
@@ -106,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
         Button answer3_button = (Button)findViewById(R.id.answer3);
         answer3_button.setText(String.valueOf(this.answers.get(3)));
     }
+
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -113,4 +129,48 @@ public class MainActivity extends AppCompatActivity {
             SpotifyAppRemote.disconnect(mSpotifyAppRemote);
         }
 
+    @Override
+    public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.answer0:
+                    Button answer0_button = (Button)findViewById(R.id.answer0);
+                    if(answer0_button.getText() == song) {
+                    Log.d("CORRECT!", String.valueOf(song));
+                    }
+                    else{
+                        Log.d("Wrong...", String.valueOf(song));
+                    }
+                    break;
+                    case R.id.answer1:
+                        Button answer1_button = (Button)findViewById(R.id.answer1);
+                        if(answer1_button.getText() == song) {
+                            Log.d("CORRECT!", String.valueOf(song));
+                        }
+                        else{
+                            Log.d("Wrong...", String.valueOf(song));
+                        }
+                    break;
+                    case R.id.answer2:
+                        Button answer2_button = (Button)findViewById(R.id.answer2);
+                        if(answer2_button.getText() == song) {
+                            Log.d("CORRECT!", String.valueOf(song));
+                        }
+                        else{
+                            Log.d("Wrong...", String.valueOf(song));
+                        }
+                    break;
+                    case R.id.answer3:
+                        Button answer3_button = (Button)findViewById(R.id.answer3);
+                        if(answer3_button.getText() == song) {
+                            Log.d("CORRECT!", String.valueOf(song));
+                        }
+                        else{
+                            Log.d("Wrong...", String.valueOf(song));
+                        }
+                    break;
+                default:
+                    break;
+
+            }
+    }
 }
