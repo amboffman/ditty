@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String song;
     private String playlistUri;
     private ArrayList<String> answers = new ArrayList<String>();
+    private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSpotifyAppRemote.getPlayerApi().setShuffle(true);
         // Play
         mSpotifyAppRemote.getPlayerApi().play(this.playlistUri);
+        startRound();
 
+    }
+    private void startRound(){
+        answers.clear();
+        TextView scoreValue = (TextView) findViewById(R.id.score);
+        scoreValue.setText(String.valueOf(score));
 //        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerContext();
         mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
                 .setEventCallback(playerState -> {
@@ -97,15 +105,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                     if(answers.size() ==4) {
+                            //do some code here
+                        Collections.shuffle(answers);
                         setAnswers();
                     }
                 });
-
-
     }
 
     private void setAnswers(){
-        Collections.shuffle(answers);
         Log.d("Answers", String.valueOf(answers));
         //Update answer button to song title
         Button answer0_button = (Button)findViewById(R.id.answer0);
@@ -135,38 +142,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.answer0:
                     Button answer0_button = (Button)findViewById(R.id.answer0);
                     if(answer0_button.getText() == song) {
-                    Log.d("CORRECT!", String.valueOf(song));
+                    score++;
+                    Log.d("CORRECT! Your score", String.valueOf(score));
                     }
                     else{
-                        Log.d("Wrong...", String.valueOf(song));
+                        Log.d("Wrong, it was..", String.valueOf(song));
                     }
+                    mSpotifyAppRemote.getPlayerApi().skipNext()
+                    .setResultCallback(response->{
+                    startRound();
+                    });
                     break;
                     case R.id.answer1:
                         Button answer1_button = (Button)findViewById(R.id.answer1);
                         if(answer1_button.getText() == song) {
-                            Log.d("CORRECT!", String.valueOf(song));
+                            score++;
+                            Log.d("CORRECT! Your score", String.valueOf(score));
                         }
                         else{
-                            Log.d("Wrong...", String.valueOf(song));
+                            Log.d("Wrong, it was..", String.valueOf(song));
                         }
+                        mSpotifyAppRemote.getPlayerApi().skipNext()
+                                .setResultCallback(response->{
+                                    startRound();
+                                });
                     break;
                     case R.id.answer2:
                         Button answer2_button = (Button)findViewById(R.id.answer2);
                         if(answer2_button.getText() == song) {
-                            Log.d("CORRECT!", String.valueOf(song));
+                            score++;
+                            Log.d("CORRECT! Your score", String.valueOf(score));
                         }
                         else{
-                            Log.d("Wrong...", String.valueOf(song));
+                            Log.d("Wrong, it was..", String.valueOf(song));
                         }
+                        mSpotifyAppRemote.getPlayerApi().skipNext()
+                                .setResultCallback(response->{
+                                    startRound();
+                                });
                     break;
                     case R.id.answer3:
                         Button answer3_button = (Button)findViewById(R.id.answer3);
                         if(answer3_button.getText() == song) {
-                            Log.d("CORRECT!", String.valueOf(song));
+                            score++;
+                            Log.d("CORRECT! Your score", String.valueOf(score));
                         }
                         else{
-                            Log.d("Wrong...", String.valueOf(song));
+                            Log.d("Wrong, it was..", String.valueOf(song));
                         }
+                        mSpotifyAppRemote.getPlayerApi().skipNext()
+                                .setResultCallback(response->{
+                                    startRound();
+                                });
                     break;
                 default:
                     break;
