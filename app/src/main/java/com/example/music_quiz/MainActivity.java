@@ -10,9 +10,9 @@ import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.types.ListItem;
-import com.spotify.protocol.types.Track;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -82,13 +82,16 @@ public class MainActivity extends AppCompatActivity {
                             mSpotifyAppRemote.getPlayerApi().skipNext();
                         }
                     }
-                    setAnswers();
+                    if(answers.size() ==4) {
+                        setAnswers();
+                    }
                 });
 
 
     }
 
     private void setAnswers(){
+        Collections.shuffle(answers);
         Log.d("Answers", String.valueOf(answers));
         //Update answer button to song title
         Button answer0_button = (Button)findViewById(R.id.answer0);
