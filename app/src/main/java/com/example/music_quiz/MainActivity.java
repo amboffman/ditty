@@ -2,6 +2,7 @@ package com.example.music_quiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String playlistUri;
     private ArrayList<String> answers = new ArrayList<String>();
     private int score = 0;
+    private String checkedMark = "\u2713";
+    private int buttonBlue = Color.parseColor("#2196F3");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,15 +119,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("Answers", String.valueOf(answers));
         //Update answer button to song title
         Button answer0_button = (Button)findViewById(R.id.answer0);
+        answer0_button.setBackgroundColor(buttonBlue);
         answer0_button.setText(String.valueOf(this.answers.get(0)));
 
         Button answer1_button = (Button)findViewById(R.id.answer1);
+        answer1_button.setBackgroundColor(buttonBlue);
         answer1_button.setText(String.valueOf(this.answers.get(1)));
 
         Button answer2_button = (Button)findViewById(R.id.answer2);
+        answer2_button.setBackgroundColor(buttonBlue);
         answer2_button.setText(String.valueOf(this.answers.get(2)));
 
         Button answer3_button = (Button)findViewById(R.id.answer3);
+        answer3_button.setBackgroundColor(buttonBlue);
         answer3_button.setText(String.valueOf(this.answers.get(3)));
     }
 
@@ -143,13 +150,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Button answer0_button = (Button)findViewById(R.id.answer0);
                     if(answer0_button.getText() == song) {
                     score++;
+                    answer0_button.setBackgroundColor(Color.GREEN);
+                    answer0_button.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                     }
                     else{
                         Log.d("Wrong, it was..", String.valueOf(song));
+                        answer0_button.setBackgroundColor(Color.RED);
+                        answer0_button.setText("X");;
                     }
                     mSpotifyAppRemote.getPlayerApi().skipNext()
                     .setResultCallback(response->{
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     startRound();
                     });
                     break;
@@ -157,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Button answer1_button = (Button)findViewById(R.id.answer1);
                         if(answer1_button.getText() == song) {
                             score++;
+                            answer1_button.setBackgroundColor(Color.GREEN);
+                            answer1_button.setText(checkedMark);
                             Log.d("CORRECT! Your score", String.valueOf(score));
                         }
                         else{
@@ -164,6 +182,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         mSpotifyAppRemote.getPlayerApi().skipNext()
                                 .setResultCallback(response->{
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                     startRound();
                                 });
                     break;
@@ -171,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Button answer2_button = (Button)findViewById(R.id.answer2);
                         if(answer2_button.getText() == song) {
                             score++;
+                            answer2_button.setBackgroundColor(Color.GREEN);
+                            answer2_button.setText(checkedMark);
                             Log.d("CORRECT! Your score", String.valueOf(score));
                         }
                         else{
@@ -178,6 +203,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         mSpotifyAppRemote.getPlayerApi().skipNext()
                                 .setResultCallback(response->{
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                     startRound();
                                 });
                     break;
@@ -185,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Button answer3_button = (Button)findViewById(R.id.answer3);
                         if(answer3_button.getText() == song) {
                             score++;
+                            answer3_button.setBackgroundColor(Color.GREEN);
+                            answer3_button.setText(checkedMark);
                             Log.d("CORRECT! Your score", String.valueOf(score));
                         }
                         else{
@@ -192,6 +224,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         mSpotifyAppRemote.getPlayerApi().skipNext()
                                 .setResultCallback(response->{
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                     startRound();
                                 });
                     break;
