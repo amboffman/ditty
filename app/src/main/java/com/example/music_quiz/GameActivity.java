@@ -228,6 +228,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
+                    answer1_button.setBackgroundColor(Color.RED);
+                    answer1_button.setText("X");;
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -249,6 +251,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
+                    answer2_button.setBackgroundColor(Color.RED);
+                    answer2_button.setText("X");;
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -270,6 +274,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
+                    answer3_button.setBackgroundColor(Color.RED);
+                    answer3_button.setText("X");;
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
