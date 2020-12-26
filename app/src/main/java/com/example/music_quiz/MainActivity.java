@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    private SpotifyAppRemote mSpotifyAppRemote;
+    public static final String EXTRA_MESSAGE = "com.example.music_quiz.START";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public void startGame() {
         // Do something in response to button
         Intent gameActivity = new Intent(this, GameActivity.class);
+        gameActivity.putExtra(EXTRA_MESSAGE, "start");
         startActivity(gameActivity);
     }
 
@@ -38,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

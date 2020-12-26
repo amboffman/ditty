@@ -26,6 +26,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private SpotifyAppRemote mSpotifyAppRemote;
     private String song;
     private String playlistUri;
+    private  Boolean paused = false;
     private ArrayList<String> answers = new ArrayList<String>();
     public int score = 0;
     private String checkedMark = "\u2713";
@@ -66,29 +67,36 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        // Set the connection parameters
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
-        ConnectionParams connectionParams =
-                new ConnectionParams.Builder(CLIENT_ID)
-                        .setRedirectUri(REDIRECT_URI)
-                        .showAuthView(true)
-                        .build();
 
-        SpotifyAppRemote.connect(this, connectionParams, new Connector.ConnectionListener(){
-            @Override
-            public void onConnected(SpotifyAppRemote spotifyAppRemote){
-                mSpotifyAppRemote = spotifyAppRemote;
-                Log.d("MainActivity", "Connected! Yay!");
-                // Now you can start interacting with App Remote
-                connected();
-            }
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.e("MainActivity", throwable.getMessage(), throwable);
+            // Set the connection parameters
+            SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+            ConnectionParams connectionParams =
+                    new ConnectionParams.Builder(CLIENT_ID)
+                            .setRedirectUri(REDIRECT_URI)
+                            .showAuthView(true)
+                            .build();
 
-                // Something went wrong when attempting to connect! Handle errors here
-            }
-        });
+            SpotifyAppRemote.connect(this, connectionParams, new Connector.ConnectionListener() {
+                @Override
+                public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                    mSpotifyAppRemote = spotifyAppRemote;
+                    Log.d("MainActivity", "Connected! Yay!");
+                    // Now you can start interacting with App Remote
+                    if(!getIntent().hasExtra("com.example.music_quiz.START")) {
+                        Log.d("RESUMING", "RESUMING");
+                        mSpotifyAppRemote.getPlayerApi().resume();
+                    }else {
+                        connected();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Log.e("MainActivity", throwable.getMessage(), throwable);
+
+                    // Something went wrong when attempting to connect! Handle errors here
+                }
+            });
     }
 
     private void connected() {
@@ -115,7 +123,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         answers.clear();
         TextView scoreValue = (TextView) findViewById(R.id.score);
         scoreValue.setText(String.valueOf(score));
-//        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerContext();
         mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
                 .setEventCallback(playerState -> {
                     if (!answers.contains(playerState.track.name)) {
@@ -176,6 +183,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         mSpotifyAppRemote.getPlayerApi().pause();
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSpotifyAppRemote.getPlayerApi().pause();
+        getIntent().removeExtra("com.example.music_quiz.START");
     }
 
     @Override
