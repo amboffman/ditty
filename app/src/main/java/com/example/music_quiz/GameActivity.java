@@ -17,6 +17,7 @@ import com.spotify.protocol.types.ListItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
@@ -120,18 +121,35 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     if (!answers.contains(playerState.track.name)) {
                         answers.add(playerState.track.name);
                         song = playerState.track.name;
-                        if (answers.size() < 4) {
+                        if (answers.size() < 3) {
                             mSpotifyAppRemote.getPlayerApi().skipNext();
                         }
+                        if (answers.size() == 3) {
+                            mSpotifyAppRemote.getPlayerApi().skipNext()
+                            .setResultCallback(cb->{
+                                Long startMs = nextLong(new Random(playerState.track.duration),playerState.track.duration + 15000);
+                                mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs);
+                            });
+                        }
+                        if (answers.size() == 4) {
+                            //do some code here
+                            Collections.shuffle(answers);
+                            setAnswers();
+
                     }
-                    if (answers.size() == 4) {
-                        //do some code here
-                        Collections.shuffle(answers);
-                        setAnswers();
                     }
                 });
 }
 
+    public long nextLong(Random rng, long n) {
+        // error checking and 2^x checking removed for simplicity.
+        long bits, val;
+        do {
+            bits = (rng.nextLong() << 1) >>> 1;
+            val = bits % n;
+        } while (bits-val+(n-1) < 0L);
+        return val;
+    }
     private void setAnswers(){
         Log.d("Answers", String.valueOf(answers));
         //Update answer button to song title
