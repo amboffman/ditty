@@ -2,6 +2,8 @@ package com.example.music_quiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,23 +35,34 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private String checkedMark = "\u2713";
     private int buttonBlue = Color.parseColor("#2196F3");
     public static final String EXTRA_MESSAGE = "com.example.music_quiz.SCORE";
+    private Button answerButton0;
+    private Button answerButton1;
+    private Button answerButton2;
+    private Button answerButton3;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_game);
-        Button answer0_button = (Button)findViewById(R.id.answer0);
-        answer0_button.setOnClickListener(this);
 
-        Button answer1_button = (Button)findViewById(R.id.answer1);
-        answer1_button.setOnClickListener(this);
+        answerButton0 = (Button)findViewById(R.id.answer0);
+        answerButton0.setOnClickListener(this);
+        answerButton0.setVisibility(View.GONE);
 
-        Button answer2_button = (Button)findViewById(R.id.answer2);
-        answer2_button.setOnClickListener(this);
+        answerButton1 = (Button)findViewById(R.id.answer1);
+        answerButton1.setOnClickListener(this);
+        answerButton1.setVisibility(View.GONE);
 
-        Button answer3_button = (Button)findViewById(R.id.answer3);
-        answer3_button.setOnClickListener(this);
+        answerButton2 = (Button)findViewById(R.id.answer2);
+        answerButton2.setOnClickListener(this);
+        answerButton2.setVisibility(View.GONE);
+
+        answerButton3 = (Button)findViewById(R.id.answer3);
+        answerButton3.setOnClickListener(this);
+        answerButton3.setVisibility(View.GONE);
 
         Button end_game_button = (Button)findViewById(R.id.endGameButton);
         end_game_button.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +150,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             .setResultCallback(cb->{
                                 Long startMs = nextLong(new Random(playerState.track.duration),playerState.track.duration + 15000);
                                 mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs);
+                                mSpotifyAppRemote.getPlayerApi().pause();
                             });
                         }
                         else{
@@ -158,28 +172,112 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         return val;
     }
     private void setAnswers(){
+
         Log.d("Answers", String.valueOf(answers));
         if(!answers.contains(this.song)){
-        Log.d("Answer Missing", this.song);
         int randomAnswerIndex = new Random().nextInt(answers.size()+1);
         answers.set(randomAnswerIndex, this.song);
         }
         //Update answer button to song title
-        Button answer0_button = (Button)findViewById(R.id.answer0);
-        answer0_button.setBackgroundColor(buttonBlue);
-        answer0_button.setText(String.valueOf(this.answers.get(0)));
+        answerButton0.setBackgroundColor(buttonBlue);
+        answerButton0.setText(String.valueOf(this.answers.get(0)));
 
-        Button answer1_button = (Button)findViewById(R.id.answer1);
-        answer1_button.setBackgroundColor(buttonBlue);
-        answer1_button.setText(String.valueOf(this.answers.get(1)));
+        answerButton1.setBackgroundColor(buttonBlue);
+        answerButton1.setText(String.valueOf(this.answers.get(1)));
 
-        Button answer2_button = (Button)findViewById(R.id.answer2);
-        answer2_button.setBackgroundColor(buttonBlue);
-        answer2_button.setText(String.valueOf(this.answers.get(2)));
+        answerButton2.setBackgroundColor(buttonBlue);
+        answerButton2.setText(String.valueOf(this.answers.get(2)));
 
-        Button answer3_button = (Button)findViewById(R.id.answer3);
-        answer3_button.setBackgroundColor(buttonBlue);
-        answer3_button.setText(String.valueOf(this.answers.get(3)));
+        answerButton3.setBackgroundColor(buttonBlue);
+        answerButton3.setText(String.valueOf(this.answers.get(3)));
+        fadeAnswersIn();
+    }
+
+    private void fadeAnswersIn(){
+        int longAnimationDuration = getResources().getInteger(
+        android.R.integer.config_longAnimTime);
+        answerButton0.setAlpha(0f);
+        answerButton0.setVisibility(View.VISIBLE);
+        answerButton0.animate()
+                .alpha(1f)
+                .setDuration(longAnimationDuration)
+                .setListener(new AnimatorListenerAdapter(){
+                    @Override
+                    public void onAnimationEnd(Animator animation){
+                        answerButton1.setAlpha(0f);
+                        answerButton1.setVisibility(View.VISIBLE);
+                        answerButton1.animate()
+                                .alpha(1f)
+                                .setDuration(longAnimationDuration)
+                                .setListener(new AnimatorListenerAdapter(){
+                                    @Override
+                                    public void onAnimationEnd(Animator animation){
+                                        answerButton2.setAlpha(0f);
+                                        answerButton2.setVisibility(View.VISIBLE);
+                                        answerButton2.animate()
+                                                .alpha(1f)
+                                                .setDuration(longAnimationDuration)
+                                                .setListener(new AnimatorListenerAdapter(){
+                                                    @Override
+                                                    public void onAnimationEnd(Animator animation){
+                                                        answerButton3.setAlpha(0f);
+                                                        answerButton3.setVisibility(View.VISIBLE);
+                                                        answerButton3.animate()
+                                                                .alpha(1f)
+                                                                .setDuration(longAnimationDuration)
+                                                                .setListener(new AnimatorListenerAdapter(){
+                                                                    @Override
+                                                                    public void onAnimationEnd(Animator animation){
+                                                                        mSpotifyAppRemote.getPlayerApi().resume();
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+                                    }
+                                });
+                    }
+                });
+
+    }
+    private void fadeAnswersOut(){
+        int shortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
+        answerButton0.animate()
+                .alpha(0f)
+                .setDuration(shortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter(){
+                    @Override
+                    public void onAnimationEnd(Animator animation){
+                        answerButton0.setVisibility(View.GONE);
+                    }
+                });
+        answerButton1.animate()
+                .alpha(0f)
+                .setDuration(shortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter(){
+                    @Override
+                    public void onAnimationEnd(Animator animation){
+                        answerButton1.setVisibility(View.GONE);
+                    }
+                });
+        answerButton2.animate()
+                .alpha(0f)
+                .setDuration(shortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter(){
+                    @Override
+                    public void onAnimationEnd(Animator animation){
+                        answerButton2.setVisibility(View.GONE);
+                    }
+                });
+        answerButton3.animate()
+                .alpha(0f)
+                .setDuration(shortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter(){
+                    @Override
+                    public void onAnimationEnd(Animator animation){
+                        answerButton3.setVisibility(View.GONE);
+                    }
+                });
 
     }
 
@@ -202,17 +300,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.answer0:
-                Button answer0_button = (Button)findViewById(R.id.answer0);
-                if(answer0_button.getText().equals(song)) {
+                if(answerButton0.getText().equals(song)) {
                     score++;
-                    answer0_button.setBackgroundColor(Color.GREEN);
-                    answer0_button.setText(checkedMark);
+                    answerButton0.setBackgroundColor(Color.GREEN);
+                    answerButton0.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                 }
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
-                    answer0_button.setBackgroundColor(Color.RED);
-                    answer0_button.setText("X");;
+                    answerButton0.setBackgroundColor(Color.RED);
+                    answerButton0.setText("X");;
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -225,17 +322,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
             case R.id.answer1:
-                Button answer1_button = (Button)findViewById(R.id.answer1);
-                if(answer1_button.getText().equals(song)) {
+                if(answerButton1.getText().equals(song)) {
                     score++;
-                    answer1_button.setBackgroundColor(Color.GREEN);
-                    answer1_button.setText(checkedMark);
+                    answerButton1.setBackgroundColor(Color.GREEN);
+                    answerButton1.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                 }
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
-                    answer1_button.setBackgroundColor(Color.RED);
-                    answer1_button.setText("X");;
+                    answerButton1.setBackgroundColor(Color.RED);
+                    answerButton1.setText("X");;
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -248,17 +344,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
             case R.id.answer2:
-                Button answer2_button = (Button)findViewById(R.id.answer2);
-                if(answer2_button.getText() == song) {
+                if(answerButton2.getText() == song) {
                     score++;
-                    answer2_button.setBackgroundColor(Color.GREEN);
-                    answer2_button.setText(checkedMark);
+                    answerButton2.setBackgroundColor(Color.GREEN);
+                    answerButton2.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                 }
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
-                    answer2_button.setBackgroundColor(Color.RED);
-                    answer2_button.setText("X");;
+                    answerButton2.setBackgroundColor(Color.RED);
+                    answerButton2.setText("X");;
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -271,17 +366,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
             case R.id.answer3:
-                Button answer3_button = (Button)findViewById(R.id.answer3);
-                if(answer3_button.getText() == song) {
+                if(answerButton3.getText() == song) {
                     score++;
-                    answer3_button.setBackgroundColor(Color.GREEN);
-                    answer3_button.setText(checkedMark);
+                    answerButton3.setBackgroundColor(Color.GREEN);
+                    answerButton3.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                 }
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
-                    answer3_button.setBackgroundColor(Color.RED);
-                    answer3_button.setText("X");;
+                    answerButton3.setBackgroundColor(Color.RED);
+                    answerButton3.setText("X");;
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -297,5 +391,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
         }
+        fadeAnswersOut();
     }
 }
