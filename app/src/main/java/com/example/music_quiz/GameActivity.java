@@ -2,7 +2,9 @@ package com.example.music_quiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,12 +28,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private SpotifyAppRemote mSpotifyAppRemote;
     private String song;
     private String playlistUri;
-    private  Boolean paused = false;
     private ArrayList<String> answers = new ArrayList<String>();
     public int score = 0;
     private String checkedMark = "\u2713";
     private int buttonBlue = Color.parseColor("#2196F3");
     public static final String EXTRA_MESSAGE = "com.example.music_quiz.SCORE";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 endGame();
             }
         });
-
     }
     public void endGame() {
         // Do something in response to button
@@ -131,18 +132,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         if (answers.size() < 3) {
                             mSpotifyAppRemote.getPlayerApi().skipNext();
                         }
-                        if (answers.size() == 3) {
+                        else if (answers.size() == 3) {
                             mSpotifyAppRemote.getPlayerApi().skipNext()
                             .setResultCallback(cb->{
                                 Long startMs = nextLong(new Random(playerState.track.duration),playerState.track.duration + 15000);
                                 mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs);
                             });
                         }
-                        if (answers.size() == 4) {
+                        else{
                             //do some code here
                             Collections.shuffle(answers);
                             setAnswers();
-
                     }
                     }
                 });
@@ -159,6 +159,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void setAnswers(){
         Log.d("Answers", String.valueOf(answers));
+        if(!answers.contains(this.song)){
+        Log.d("Answer Missing", this.song);
+        int randomAnswerIndex = new Random().nextInt(answers.size()+1);
+        answers.set(randomAnswerIndex, this.song);
+        }
         //Update answer button to song title
         Button answer0_button = (Button)findViewById(R.id.answer0);
         answer0_button.setBackgroundColor(buttonBlue);
@@ -175,6 +180,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Button answer3_button = (Button)findViewById(R.id.answer3);
         answer3_button.setBackgroundColor(buttonBlue);
         answer3_button.setText(String.valueOf(this.answers.get(3)));
+
     }
 
 
@@ -197,7 +203,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.answer0:
                 Button answer0_button = (Button)findViewById(R.id.answer0);
-                if(answer0_button.getText() == song) {
+                if(answer0_button.getText().equals(song)) {
                     score++;
                     answer0_button.setBackgroundColor(Color.GREEN);
                     answer0_button.setText(checkedMark);
@@ -220,7 +226,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.answer1:
                 Button answer1_button = (Button)findViewById(R.id.answer1);
-                if(answer1_button.getText() == song) {
+                if(answer1_button.getText().equals(song)) {
                     score++;
                     answer1_button.setBackgroundColor(Color.GREEN);
                     answer1_button.setText(checkedMark);
