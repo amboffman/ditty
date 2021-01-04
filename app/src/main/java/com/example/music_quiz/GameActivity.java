@@ -148,14 +148,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         else if (answers.size() == 3) {
                             mSpotifyAppRemote.getPlayerApi().skipNext()
                             .setResultCallback(cb->{
-                                Long startMs = nextLong(new Random(playerState.track.duration),playerState.track.duration + 15000);
+                                Long startMs = nextLong(new Random(playerState.track.duration),((playerState.track.duration - 30000)));
                                 mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs);
                                 mSpotifyAppRemote.getPlayerApi().pause();
+
                             });
                         }
                         else{
                             //do some code here
-                            Collections.shuffle(answers);
                             setAnswers();
                     }
                     }
@@ -174,10 +174,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void setAnswers(){
 
         Log.d("Answers", String.valueOf(answers));
+        Collections.shuffle(answers);
         if(!answers.contains(this.song)){
         int randomAnswerIndex = new Random().nextInt(answers.size()+1);
         answers.set(randomAnswerIndex, this.song);
         }
+
         //Update answer button to song title
         answerButton0.setBackgroundColor(buttonBlue);
         answerButton0.setText(String.valueOf(this.answers.get(0)));
