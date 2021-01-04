@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class AnswerTest {
 
     @Mock
-    Answer answerService;
+    Answers answerService;
 
     @Test
     public void testSetAnswer(){
@@ -30,8 +30,7 @@ public class AnswerTest {
 
     @Test
     public void testFetchAnswer() throws Exception {
-        answerService.answer = "Test Title";
-        when(answerService.fetchAnswer()).thenReturn(answerService.answer);
+        when(answerService.fetchAnswer()).thenReturn(answerService.answers);
         answerService.fetchAnswer();
         verify(answerService, times(1)).fetchAnswer();
     Assert.assertEquals("Test Title", answerService.fetchAnswer());
@@ -39,7 +38,7 @@ public class AnswerTest {
 
     @Test (expected = Exception.class)
     public void testFetchAnswerNull() throws Exception{
-        answerService.answer = null;
+        answerService.answers = null;
         doThrow(Exception.class).when(!(answerService.fetchAnswer()).equals(notNull()));
         answerService.fetchAnswer();
         verify(answerService, times(1)).fetchAnswer();

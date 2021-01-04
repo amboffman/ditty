@@ -3,12 +3,13 @@ package com.example.music_quiz;
 import androidx.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Answers {
     @VisibleForTesting
     protected ArrayList answers = new ArrayList<String>();
     private static String ANSWER_EXCEPTION = "ANSWER_EXCEPTION";
-    public void setAnswer(String track){
+    public void addAnswers(String track){
         if(answers.size() < 4) {
             answers.add(track);
         }
@@ -16,7 +17,7 @@ public class Answers {
             answers.set(0, track);
         }
     }
-    public ArrayList fetchAnswer() throws Exception {
+    public ArrayList fetchAnswers() throws Exception {
         if(answers != null) {
             return answers;
         }
@@ -24,7 +25,7 @@ public class Answers {
             throw new Exception(ANSWER_EXCEPTION);
         }
     }
-    public void clearAnswer(){
+    public void clearAnswers(){
       answers.clear();
     };
     public Boolean verifyAnswer(String title, int index){
