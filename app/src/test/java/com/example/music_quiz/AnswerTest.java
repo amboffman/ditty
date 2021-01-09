@@ -1,59 +1,70 @@
 package com.example.music_quiz;
 
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.notNull;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AnswerTest {
 
-    @Mock
-    Answers answerService;
+Answers answersClass = new Answers();
 
     @Test
-    public void testSetAnswer(){
-    answerService.setAnswer(anyString());
-    verify(answerService, times(1)).setAnswer(anyString());
+    public void testAddAnswers(){
+//        List of 4 or less stores in order
+        List testAnswers = Arrays.asList("a", "b", "c", "d");
+    answersClass.addAnswers("a");
+    answersClass.addAnswers("b");
+    answersClass.addAnswers("c");
+    answersClass.addAnswers("d");
+    ArrayList stored = answersClass.answers;
+    ArrayList expected = new ArrayList();
+    expected.addAll(testAnswers);
+    assertEquals("Add < 5 answers", expected, stored);
+
+    testAnswers = Arrays.asList("e", "b", "c", "d");
+    expected.clear();
+    expected.addAll(testAnswers);
+    answersClass.addAnswers("e");
+    assertEquals("Add > 5 answers",expected, stored);
     }
 
     @Test
-    public void testFetchAnswer() throws Exception {
-        when(answerService.fetchAnswer()).thenReturn(answerService.answers);
-        answerService.fetchAnswer();
-        verify(answerService, times(1)).fetchAnswer();
-    Assert.assertEquals("Test Title", answerService.fetchAnswer());
-    }
-
-    @Test (expected = Exception.class)
-    public void testFetchAnswerNull() throws Exception{
-        answerService.answers = null;
-        doThrow(Exception.class).when(!(answerService.fetchAnswer()).equals(notNull()));
-        answerService.fetchAnswer();
-        verify(answerService, times(1)).fetchAnswer();
+    public void testFetchAnswer(){
+        ArrayList answers = new ArrayList();
+        answers.add("a");
+        answersClass.answers = answers;
+        ArrayList result = answersClass.fetchAnswers();
+        assertEquals(answers, result);
     }
 
     @Test
     public void testClearAnswer(){
-        answerService.clearAnswer();
-        verify(answerService, times(1)).clearAnswer();
+        ArrayList addition = new ArrayList();
+        addition.add("a");
+        answersClass.answers = addition;
+        answersClass.clearAnswers();
+        ArrayList expected = new ArrayList();
+        assertEquals(expected, answersClass.answers);
     }
 
     @Test
     public void testVerifyAnswer(){
-        when(answerService.verifyAnswer(anyString())).thenReturn(true);
-        Assert.assertEquals(true, answerService.verifyAnswer("Test Title"));
+        ArrayList answers = new ArrayList();
+        answers.add("a");
+        answers.add("b");
+        answersClass.answers = answers;
+        Boolean result = answersClass.verifyAnswer("a", 0);
+        assertEquals("Verify correct answer",true, result);
+        result = answersClass.verifyAnswer("a", 1);
+        assertEquals("Verify incorrect answer",false, result);
+
     }
 
 }
