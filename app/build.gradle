@@ -15,10 +15,15 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    
+        packagingOptions {
+            exclude '**/JavaMethod.class'
+        }
 
     testOptions {
         unitTests.includeAndroidResources = true
     }
+
 
     buildTypes {
         release {

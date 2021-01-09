@@ -7,22 +7,28 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-public class Round (SpotifyAppRemote remote, PlayerState player) {
+public class Round {
+
+    SpotifyAppRemote remote;
+    PlayerState player;
+    public Round (SpotifyAppRemote passedRemote, PlayerState passedPlayer){
+        this.remote = passedRemote;
+        this.player = passedPlayer;
+    }
     Answers answers = new Answers();
     ArrayList fetchedAnswers = answers.fetchAnswers();
-    public ArrayList setup() throws Exception {
+    public ArrayList setup() {
         answers.clearAnswers();
        for(int i =0; i<4; i++){
             remote.getPlayerApi().skipNext()
-                    .setResultsCallback(cb ->{
+                    .setResultCallback(cb ->{
                         remote.getPlayerApi().pause();
-                        answers.addAnswers(player.track.title);
+                        answers.addAnswers(player.track.name);
                         int answersSize = answers.fetchAnswers().size();
                         if(answersSize > 3){
                             Long startMs = nextLong(new Random(player.track.duration),((player.track.duration - 30000)));
                             remote.getPlayerApi().seekToRelativePosition(startMs);
                             fetchedAnswers = answers.fetchAnswers();
-                            return fetchedAnswers;
                         }
                     });
         }
@@ -35,7 +41,7 @@ public class Round (SpotifyAppRemote remote, PlayerState player) {
     }
 
     public boolean next(String title) throws Exception {
-        if(title.equals(player.track.title)){
+        if(title.equals(player.track.name)){
             return true;
         }
         else{
