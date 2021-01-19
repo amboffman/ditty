@@ -1,5 +1,6 @@
 package com.example.music_quiz;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,17 +19,23 @@ import android.widget.TextView;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.ListItem;
+import com.spotify.protocol.types.PlayerState;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String CLIENT_ID = "afca0c6d0ea04e77b84465e4c5d9f2f3";
     private static final String REDIRECT_URI = "app://music.quiz";
     private SpotifyAppRemote mSpotifyAppRemote;
+    private PlayerState spotifyPlayerState;
     private String song;
     private String playlistUri;
     private ArrayList<String> answers = new ArrayList<String>();
@@ -39,7 +47,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Button answerButton1;
     private Button answerButton2;
     private Button answerButton3;
-
+    Connection connection = new Connection();
 
 
     @Override
@@ -72,65 +80,80 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-    public void endGame() {
-        // Do something in response to button
-        Intent endGameActivity = new Intent(this, EndGameActivity.class);
-        endGameActivity.putExtra(EXTRA_MESSAGE, String.valueOf(this.score));
-        startActivity(endGameActivity);
-    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
             // Set the connection parameters
-            SpotifyAppRemote.disconnect(mSpotifyAppRemote);
-            ConnectionParams connectionParams =
-                    new ConnectionParams.Builder(CLIENT_ID)
-                            .setRedirectUri(REDIRECT_URI)
-                            .showAuthView(true)
-                            .build();
+        connection.connectSpotify(this, new ConnectionCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onSuccess() {
+                Log.d("Quiz Connection:", "Successful");
+                mSpotifyAppRemote = connection.getSpotifyRemote();
+                    connected();
+            }
 
-            SpotifyAppRemote.connect(this, connectionParams, new Connector.ConnectionListener() {
-                @Override
-                public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                    mSpotifyAppRemote = spotifyAppRemote;
-                    Log.d("MainActivity", "Connected! Yay!");
-                    // Now you can start interacting with App Remote
-                    if(!getIntent().hasExtra("com.example.music_quiz.START")) {
-                        Log.d("RESUMING", "RESUMING");
-                        mSpotifyAppRemote.getPlayerApi().resume();
-                    }else {
-                        connected();
-                    }
+            @Override
+            public void onError(String err) {
+                Log.e("Quiz Connection:", "Failed");
+                if(err.equals("connection err")){
+                    //Spotify login
                 }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-                    Log.e("MainActivity", throwable.getMessage(), throwable);
-
-                    // Something went wrong when attempting to connect! Handle errors here
+                else if(err.equals("capabilities err")){
+                    //Premium spotify needed
                 }
-            });
+            }
+        });
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+
+        mSpotifyAppRemote.getPlayerApi().pause();
+        getIntent().removeExtra("com.example.music_quiz.START");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mSpotifyAppRemote.getPlayerApi().pause();
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
     private void connected() {
-
         mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
                 .setResultCallback(playlistRecommendations -> {
                     final ListItem recentlyPlayedPlaylists = playlistRecommendations.items[0];
                     mSpotifyAppRemote.getContentApi().getChildrenOfItem(recentlyPlayedPlaylists, 5, 0)
                             .setResultCallback(playlists->{
                                 final ListItem lastPlaylist = playlists.items[0];
-                                this.playlistUri = lastPlaylist.uri;
+                                playlistUri = lastPlaylist.uri;
                             });
                 });
-        //Play on phone
+        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
+        .setEventCallback(playerState->{
+            spotifyPlayerState = playerState;
+            song = playerState.track.name;
+        });
+//        //Play on phone
         mSpotifyAppRemote.getConnectApi().connectSwitchToLocalDevice();
         //Shuffle playlist
         mSpotifyAppRemote.getPlayerApi().setShuffle(true);
         // Play
-        mSpotifyAppRemote.getPlayerApi().play(this.playlistUri);
+        mSpotifyAppRemote.getPlayerApi().play(playlistUri);
         startRound();
+//        Round round = new Round(mSpotifyAppRemote, spotifyPlayerState);
+//        ArrayList<Answers> answers = round.setup();
+
 
     }
     private void startRound(){
@@ -174,7 +197,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void setAnswers(){
 
         Log.d("Answers", String.valueOf(answers));
-        Collections.shuffle(answers);
+//        Collections.shuffle(answers);
         if(!answers.contains(this.song)){
         int randomAnswerIndex = new Random().nextInt(answers.size()+1);
         answers.set(randomAnswerIndex, this.song);
@@ -284,20 +307,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mSpotifyAppRemote.getPlayerApi().pause();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mSpotifyAppRemote.getPlayerApi().pause();
-        getIntent().removeExtra("com.example.music_quiz.START");
+    public void endGame() {
+        // Do something in response to button
+        Intent endGameActivity = new Intent(this, EndGameActivity.class);
+        endGameActivity.putExtra(EXTRA_MESSAGE, String.valueOf(this.score));
+        startActivity(endGameActivity);
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){

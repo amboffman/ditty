@@ -1,44 +1,71 @@
 package com.example.music_quiz;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.types.PlayerState;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class Round {
+public class Round implements AnswerShuffler {
 
     SpotifyAppRemote remote;
     PlayerState player;
+    AnswerShuffler answerShuffler;
     public Round (SpotifyAppRemote passedRemote, PlayerState passedPlayer){
         this.remote = passedRemote;
         this.player = passedPlayer;
     }
+
+    public ArrayList<Answers> shuffle(ArrayList <Answers> answers){
+        Collections.shuffle(answers);
+    return answers;
+    }
+
     Answers answers = new Answers();
-    ArrayList fetchedAnswers = answers.fetchAnswers();
-    public ArrayList setup() {
-        answers.clearAnswers();
-       for(int i =0; i<4; i++){
+    private void setTracks(){
+        for(int i =0; i<4; i++){
             remote.getPlayerApi().skipNext()
                     .setResultCallback(cb ->{
-                        remote.getPlayerApi().pause();
                         answers.addAnswers(player.track.name);
-                        int answersSize = answers.fetchAnswers().size();
-                        if(answersSize > 3){
+                        if(answers.fetchAnswers().size() > 3){
                             Long startMs = nextLong(new Random(player.track.duration),((player.track.duration - 30000)));
                             remote.getPlayerApi().seekToRelativePosition(startMs);
-                            fetchedAnswers = answers.fetchAnswers();
+
                         }
                     });
         }
-    return fetchedAnswers;
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public ArrayList setup() throws ExecutionException, InterruptedException {
+        answers.clearAnswers();
+       CompletableFuture<Void> setFuture = CompletableFuture.supplyAsync(()->{
+          setTracks();
+          return null;
+       });
+        CompletableFuture<ArrayList> fetchFuture = setFuture.thenApply(s->{
+        ArrayList<Answers> fetched = answers.fetchAnswers();
+        shuffle(fetched);
+        return fetched;
+        });
+
+    return fetchFuture.get();
+    }
+
     public void play() throws InterruptedException {
         remote.getPlayerApi().resume();
         TimeUnit.SECONDS.sleep(15);
         remote.getPlayerApi().pause();
     }
+
 
     public boolean next(String title) throws Exception {
         if(title.equals(player.track.name)){
