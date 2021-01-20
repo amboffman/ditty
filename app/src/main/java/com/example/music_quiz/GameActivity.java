@@ -85,14 +85,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
 
-            // Set the connection parameters
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        // Set the connection parameters
         connection.connectSpotify(this, new ConnectionCallback() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess() {
                 Log.d("Quiz Connection:", "Successful");
                 mSpotifyAppRemote = connection.getSpotifyRemote();
-                    connected();
+                connected();
             }
 
             @Override
@@ -109,24 +113,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onResume(){
-        super.onResume();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
-
         mSpotifyAppRemote.getPlayerApi().pause();
-        getIntent().removeExtra("com.example.music_quiz.START");
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mSpotifyAppRemote.getPlayerApi().pause();
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        mSpotifyAppRemote.getPlayerApi().pause();
     }
 
     private void connected() {
@@ -144,16 +141,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             spotifyPlayerState = playerState;
             song = playerState.track.name;
         });
-//        //Play on phone
+        //Play on phone
         mSpotifyAppRemote.getConnectApi().connectSwitchToLocalDevice();
         //Shuffle playlist
         mSpotifyAppRemote.getPlayerApi().setShuffle(true);
         // Play
         mSpotifyAppRemote.getPlayerApi().play(playlistUri);
         startRound();
-//        Round round = new Round(mSpotifyAppRemote, spotifyPlayerState);
-//        ArrayList<Answers> answers = round.setup();
-
 
     }
     private void startRound(){
