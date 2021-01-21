@@ -6,6 +6,52 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/playlist3"
+        android:layout_width="409dp"
+        android:layout_height="52dp"
+        app:backgroundTint="#2196F3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlist2"
+        app:layout_constraintVertical_bias="0.176" />
+
+    <Button
+        android:id="@+id/playlist2"
+        android:layout_width="409dp"
+        android:layout_height="52dp"
+        app:backgroundTint="#2196F3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlist1"
+        app:layout_constraintVertical_bias="0.131" />
+
+    <Button
+        android:id="@+id/playlist1"
+        android:layout_width="409dp"
+        android:layout_height="52dp"
+        app:backgroundTint="#2196F3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlist0"
+        app:layout_constraintVertical_bias="0.093" />
+
+    <Button
+        android:id="@+id/playlist0"
+        android:layout_width="409dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="52dp"
+        app:backgroundTint="#2196F3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Playlist_Selection"
+        app:layout_constraintVertical_bias="0.001" />
+
     <TextView
         android:id="@+id/Playlist_Selection"
         android:layout_width="wrap_content"
@@ -19,69 +65,5 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.095" />
-
-    <ImageView
-        android:id="@+id/playlistimage0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="58dp"
-        tools:layout_editor_absoluteY="162dp"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
-        android:id="@+id/playlistimage1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="222dp"
-        tools:layout_editor_absoluteY="162dp"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
-        android:id="@+id/playlistimage2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="58dp"
-        tools:layout_editor_absoluteY="385dp"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
-        android:id="@+id/playlistimage3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="222dp"
-        tools:layout_editor_absoluteY="385dp"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/playlist0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="91dp"
-        tools:layout_editor_absoluteY="305dp" />
-
-    <TextView
-        android:id="@+id/playlist1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="257dp"
-        tools:layout_editor_absoluteY="303dp" />
-
-    <TextView
-        android:id="@+id/playlist2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="90dp"
-        tools:layout_editor_absoluteY="534dp" />
-
-    <TextView
-        android:id="@+id/playlist3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="257dp"
-        tools:layout_editor_absoluteY="534dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

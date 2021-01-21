@@ -31,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void startGame() {
         // Do something in response to button
-        Intent gameActivity = new Intent(this, GameActivity.class);
-        gameActivity.putExtra(EXTRA_MESSAGE, "start");
-        startActivity(gameActivity);
+        Intent playlistSelectionActivity = new Intent(this, PlaylistSelectionActivity.class);
+        playlistSelectionActivity.putExtra(EXTRA_MESSAGE, "start");
+        startActivity(playlistSelectionActivity);
     }
 
     @Override
