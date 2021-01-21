@@ -129,20 +129,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void connected() {
-//        mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
-//                .setResultCallback(playlistRecommendations -> {
-//                    final ListItem recentlyPlayedPlaylists = playlistRecommendations.items[0];
-//                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(recentlyPlayedPlaylists, 5, 0)
-//                            .setResultCallback(playlists->{
-//                                final ListItem lastPlaylist = playlists.items[0];
-//                                playlistUri = lastPlaylist.uri;
-//                            });
-//                });
-        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
-        .setEventCallback(playerState->{
-            spotifyPlayerState = playerState;
-            song = playerState.track.name;
-        });
+//        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
+//        .setEventCallback(playerState->{
+//            spotifyPlayerState = playerState;
+//            song = playerState.track.name;
+//        });
         //Play on phone
         mSpotifyAppRemote.getConnectApi().connectSwitchToLocalDevice();
         //Shuffle playlist
@@ -193,7 +184,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void setAnswers(){
 
         Log.d("Answers", String.valueOf(answers));
-//        Collections.shuffle(answers);
+        Collections.shuffle(answers);
         if(!answers.contains(this.song)){
         int randomAnswerIndex = new Random().nextInt(answers.size()+1);
         answers.set(randomAnswerIndex, this.song);

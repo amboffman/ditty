@@ -90,60 +90,70 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     private void fetchPlaylists(){
         mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
                 .setResultCallback(playlistRecommendations -> {
-                    for(int i=0; i < 4; i++){
-                        playlistUris.add(playlistRecommendations.items[i].uri);
-                        if (i == 0) {
-                            playlist0.setText(playlistRecommendations.items[i].title);
-                            playlist0.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    playPlaylist(playlistRecommendations.items[0].uri);
-                                }
-                            });
-                        }
-                        else if (i == 1) {
-                            playlist1.setText(playlistRecommendations.items[i].title);
-                            playlist1.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    playPlaylist(playlistRecommendations.items[1].uri);
-                                }
-                            });
-                        }
-                        else if (i == 2) {
-                            playlist2.setText(playlistRecommendations.items[i].title);
-                            playlist2.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    playPlaylist(playlistRecommendations.items[2].uri);
-                                }
-                            });
+                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(playlistRecommendations.items[0], 4, 0)
+                            .setResultCallback(
+                                    recentlyPlayedPlaylists -> {
+                                        for(int i=0; i < 4; i++){
+                                            playlistUris.add(recentlyPlayedPlaylists.items[i].uri);
+                                            if (i == 0) {
+                                                playlist0.setText(recentlyPlayedPlaylists.items[i].title);
+                                                playlist0.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        playPlaylist(recentlyPlayedPlaylists.items[0].uri);
+                                                            }
+                                                    });
+                                            }
+                                            else if (i == 1) {
+                                                playlist1.setText(recentlyPlayedPlaylists.items[i].title);
+                                                playlist1.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        playPlaylist(recentlyPlayedPlaylists.items[1].uri);
+                                                    }
+                                                });
+                                            }
+                                            else if (i == 2) {
+                                                playlist2.setText(recentlyPlayedPlaylists.items[i].title);
+                                                playlist2.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        playPlaylist(recentlyPlayedPlaylists.items[2].uri);
+                                                    }
+                                                });
 
-                        }
-                        else if (i == 3) {
-                            playlist3.setText(playlistRecommendations.items[i].title);
-                            playlist3.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    playPlaylist(playlistRecommendations.items[3].uri);
-                                }
-                            });
-                        }
-                    }
+                                            }
+                                            else if (i == 3) {
+                                                playlist3.setText(recentlyPlayedPlaylists.items[i].title);
+                                                playlist3.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        playPlaylist(recentlyPlayedPlaylists.items[3].uri);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                            );
                 });
+
     }
     @Override
     protected void onPause() {
         super.onPause();
-        mSpotifyAppRemote.getPlayerApi().pause();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        mSpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
-        mSpotifyAppRemote.getPlayerApi().pause();
+        mSpotifyAppRemote.disconnect(mSpotifyAppRemote);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
 }
