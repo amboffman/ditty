@@ -22,6 +22,7 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.ListItem;
 import com.spotify.protocol.types.PlayerState;
+import com.spotify.protocol.types.Uri;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,6 +85,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+        playlistUri = getIntent().getStringExtra(PlaylistSelectionActivity.EXTRA_PLAYLIST_URI);
 
     }
 
@@ -127,15 +129,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void connected() {
-        mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
-                .setResultCallback(playlistRecommendations -> {
-                    final ListItem recentlyPlayedPlaylists = playlistRecommendations.items[0];
-                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(recentlyPlayedPlaylists, 5, 0)
-                            .setResultCallback(playlists->{
-                                final ListItem lastPlaylist = playlists.items[0];
-                                playlistUri = lastPlaylist.uri;
-                            });
-                });
+//        mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
+//                .setResultCallback(playlistRecommendations -> {
+//                    final ListItem recentlyPlayedPlaylists = playlistRecommendations.items[0];
+//                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(recentlyPlayedPlaylists, 5, 0)
+//                            .setResultCallback(playlists->{
+//                                final ListItem lastPlaylist = playlists.items[0];
+//                                playlistUri = lastPlaylist.uri;
+//                            });
+//                });
         mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
         .setEventCallback(playerState->{
             spotifyPlayerState = playerState;

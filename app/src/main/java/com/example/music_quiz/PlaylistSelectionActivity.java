@@ -1,9 +1,11 @@
 package com.example.music_quiz;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     public ArrayList playlistUris = new ArrayList();
     private ArrayList playlistTitles = new ArrayList();
     private  ArrayList playlistImages = new ArrayList();
+    public static final String EXTRA_PLAYLIST_URI = "com.example.music_quiz.PLAYLISTURI";
 
     Button playlist0;
     Button playlist1;
@@ -41,12 +44,10 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         playlist0 = (Button) findViewById(R.id.playlist0);
         playlist1 = (Button) findViewById(R.id.playlist1);
         playlist2 = (Button) findViewById(R.id.playlist2);
         playlist3 = (Button) findViewById(R.id.playlist3);
-
     }
 
     @Override
@@ -76,22 +77,57 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
 
     }
 
+    public void playPlaylist (String playlistURI){
+            // Do something in response to button
+        Log.d("PLAYING", String.valueOf(playlistURI));
+            Intent gameActivity = new Intent(this, GameActivity.class);
+            gameActivity.putExtra(EXTRA_PLAYLIST_URI, playlistURI);
+            startActivity(gameActivity);
+    };
+
+
 
     private void fetchPlaylists(){
         mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
                 .setResultCallback(playlistRecommendations -> {
                     for(int i=0; i < 4; i++){
+                        playlistUris.add(playlistRecommendations.items[i].uri);
                         if (i == 0) {
                             playlist0.setText(playlistRecommendations.items[i].title);
+                            playlist0.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    playPlaylist(playlistRecommendations.items[0].uri);
+                                }
+                            });
                         }
                         else if (i == 1) {
                             playlist1.setText(playlistRecommendations.items[i].title);
+                            playlist1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    playPlaylist(playlistRecommendations.items[1].uri);
+                                }
+                            });
                         }
                         else if (i == 2) {
                             playlist2.setText(playlistRecommendations.items[i].title);
+                            playlist2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    playPlaylist(playlistRecommendations.items[2].uri);
+                                }
+                            });
+
                         }
                         else if (i == 3) {
                             playlist3.setText(playlistRecommendations.items[i].title);
+                            playlist3.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    playPlaylist(playlistRecommendations.items[3].uri);
+                                }
+                            });
                         }
                     }
                 });
