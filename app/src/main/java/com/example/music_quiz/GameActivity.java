@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.PlayerApi;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.ListItem;
@@ -29,14 +30,18 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String CLIENT_ID = "afca0c6d0ea04e77b84465e4c5d9f2f3";
     private static final String REDIRECT_URI = "app://music.quiz";
-    private SpotifyAppRemote mSpotifyAppRemote;
-    private PlayerState spotifyPlayerState;
+    private static SpotifyAppRemote mSpotifyAppRemote;
+    public PlayerState spotifyPlayerState;
     private String song;
     private String playlistUri;
     private ArrayList<String> answers = new ArrayList<String>();
@@ -48,6 +53,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Button answerButton1;
     private Button answerButton2;
     private Button answerButton3;
+    private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> preview;
     Connection connection = new Connection();
 
 
@@ -129,11 +136,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void connected() {
-//        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
-//        .setEventCallback(playerState->{
-//            spotifyPlayerState = playerState;
-//            song = playerState.track.name;
-//        });
         //Play on phone
         mSpotifyAppRemote.getConnectApi().connectSwitchToLocalDevice();
         //Shuffle playlist
@@ -165,22 +167,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             });
                         }
                         else{
-                            //do some code here
                             setAnswers();
                     }
                     }
                 });
 }
 
-    public long nextLong(Random rng, long n) {
-        // error checking and 2^x checking removed for simplicity.
-        long bits, val;
-        do {
-            bits = (rng.nextLong() << 1) >>> 1;
-            val = bits % n;
-        } while (bits-val+(n-1) < 0L);
-        return val;
-    }
     private void setAnswers(){
 
         Log.d("Answers", String.valueOf(answers));
@@ -240,7 +232,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                                                 .setListener(new AnimatorListenerAdapter(){
                                                                     @Override
                                                                     public void onAnimationEnd(Animator animation){
-                                                                        mSpotifyAppRemote.getPlayerApi().resume();
+                                                                       previewSong();
                                                                     }
                                                                 });
                                                     }
@@ -251,6 +243,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 });
 
     }
+    private void previewSong(){
+        mSpotifyAppRemote.getPlayerApi().resume();
+        preview = executorService.scheduleWithFixedDelay(GameActivity::endPreview, 10, 10, TimeUnit.SECONDS);
+
+    };
+    private static void endPreview(){
+        mSpotifyAppRemote.getPlayerApi().pause();
+    };
+
+    public long nextLong(Random rng, long n) {
+        // error checking and 2^x checking removed for simplicity.
+        long bits, val;
+        do {
+            bits = (rng.nextLong() << 1) >>> 1;
+            val = bits % n;
+        } while (bits-val+(n-1) < 0L);
+        return val;
+    }
+
     private void fadeAnswersOut(){
         int shortAnimationDuration = getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
@@ -297,12 +308,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     public void endGame() {
         // Do something in response to button
+        preview.cancel(true);
+        mSpotifyAppRemote.getPlayerApi().pause();
         Intent endGameActivity = new Intent(this, EndGameActivity.class);
         endGameActivity.putExtra(EXTRA_MESSAGE, String.valueOf(this.score));
         startActivity(endGameActivity);
     }
     @Override
     public void onClick(View v) {
+        preview.cancel(true);
         switch (v.getId()){
             case R.id.answer0:
                 if(answerButton0.getText().equals(song)) {
