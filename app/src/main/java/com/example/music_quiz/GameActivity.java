@@ -48,6 +48,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private String playlistUri;
     private ArrayList<String> answers = new ArrayList<String>();
     public int score = 0;
+    private int incorrect = 0;
     private String checkedMark = "\u2713";
     private int buttonBlue = Color.parseColor("#2196F3");
     public static final String EXTRA_MESSAGE = "com.example.music_quiz.SCORE";
@@ -55,6 +56,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Button answerButton1;
     private Button answerButton2;
     private Button answerButton3;
+    private TextView incorrect0;
+    private TextView incorrect1;
+    private TextView incorrect2;
     private ProgressBar roundTime;
     private CountDownTimer roundTimer = new CountDownTimer(10000, 1000) {
         public void onTick(long millisUntilFinished) {
@@ -66,6 +70,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         public void onFinish() {
             roundTime.setProgress(0);
             mSpotifyAppRemote.getPlayerApi().pause();
+            incorrect();
+            if(incorrect != 3) {
+                mSpotifyAppRemote.getPlayerApi().skipNext()
+                        .setResultCallback(response -> {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            startRound();
+                        });
+            }
         }
     };
     Connection connection = new Connection();
@@ -94,6 +110,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         answerButton3 = (Button)findViewById(R.id.answer3);
         answerButton3.setOnClickListener(this);
         answerButton3.setVisibility(View.GONE);
+
+        incorrect0 = (TextView) findViewById(R.id.incorrect0);
+        incorrect1 = (TextView) findViewById(R.id.incorrect1);
+        incorrect2 = (TextView) findViewById(R.id.incorrect2);
 
         Button end_game_button = (Button)findViewById(R.id.endGameButton);
         end_game_button.setOnClickListener(new View.OnClickListener() {
@@ -318,7 +338,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
+private void incorrect(){
+    incorrect++;
+    if(incorrect == 1){incorrect0.setTextColor(Color.RED);}
+    else if(incorrect ==2){incorrect1.setTextColor(Color.RED);}
+    else if(incorrect == 3){incorrect2.setTextColor(Color.RED);
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        endGame();
+    }
+}
 
     public void endGame() {
         // Do something in response to button
@@ -343,6 +375,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d("Wrong, it was..", String.valueOf(song));
                     answerButton0.setBackgroundColor(Color.RED);
                     answerButton0.setText("X");;
+                    incorrect();
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -364,7 +397,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
                     answerButton1.setBackgroundColor(Color.RED);
-                    answerButton1.setText("X");;
+                    answerButton1.setText("X");
+                    incorrect();
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -386,7 +420,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
                     answerButton2.setBackgroundColor(Color.RED);
-                    answerButton2.setText("X");;
+                    answerButton2.setText("X");
+                    incorrect();
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -408,7 +443,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 else{
                     Log.d("Wrong, it was..", String.valueOf(song));
                     answerButton3.setBackgroundColor(Color.RED);
-                    answerButton3.setText("X");;
+                    answerButton3.setText("X");
+                    incorrect();
                 }
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
