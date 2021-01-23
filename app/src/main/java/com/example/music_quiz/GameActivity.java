@@ -11,9 +11,11 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -53,8 +55,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Button answerButton1;
     private Button answerButton2;
     private Button answerButton3;
-    private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture<?> preview;
+    private ProgressBar roundTime;
+    private CountDownTimer roundTimer = new CountDownTimer(10000, 1000) {
+        public void onTick(long millisUntilFinished) {
+            int total = (int) ((float) millisUntilFinished);
+            roundTime.setProgress(total);
+            Log.d("Seconds Left", String.valueOf(total));
+        }
+
+        public void onFinish() {
+            roundTime.setProgress(0);
+            mSpotifyAppRemote.getPlayerApi().pause();
+        }
+    };
     Connection connection = new Connection();
 
 
@@ -67,6 +80,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         answerButton0 = (Button)findViewById(R.id.answer0);
         answerButton0.setOnClickListener(this);
         answerButton0.setVisibility(View.GONE);
+
+        roundTime = (ProgressBar)findViewById(R.id.roundTime);
 
         answerButton1 = (Button)findViewById(R.id.answer1);
         answerButton1.setOnClickListener(this);
@@ -147,6 +162,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void startRound(){
         answers.clear();
+        roundTime.setMax(10000);
+        roundTime.setProgress(10000);
         TextView scoreValue = (TextView) findViewById(R.id.score);
         scoreValue.setText(String.valueOf(score));
         mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
@@ -245,13 +262,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void previewSong(){
         mSpotifyAppRemote.getPlayerApi().resume();
-        preview = executorService.scheduleWithFixedDelay(GameActivity::endPreview, 10, 10, TimeUnit.SECONDS);
+        roundTime.setMax(10000);
+        roundTimer.start();
 
     };
-    private static void endPreview(){
-        mSpotifyAppRemote.getPlayerApi().pause();
-    };
-
     public long nextLong(Random rng, long n) {
         // error checking and 2^x checking removed for simplicity.
         long bits, val;
@@ -308,7 +322,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     public void endGame() {
         // Do something in response to button
-        preview.cancel(true);
+        roundTimer.cancel();
         mSpotifyAppRemote.getPlayerApi().pause();
         Intent endGameActivity = new Intent(this, EndGameActivity.class);
         endGameActivity.putExtra(EXTRA_MESSAGE, String.valueOf(this.score));
@@ -316,7 +330,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     public void onClick(View v) {
-        preview.cancel(true);
+        roundTimer.cancel();
         switch (v.getId()){
             case R.id.answer0:
                 if(answerButton0.getText().equals(song)) {
