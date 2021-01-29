@@ -96,20 +96,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         answerButton0 = (Button)findViewById(R.id.answer0);
         answerButton0.setOnClickListener(this);
         answerButton0.setVisibility(View.GONE);
+        answerButton0.setEnabled(false);
+
 
         roundTime = (ProgressBar)findViewById(R.id.roundTime);
 
         answerButton1 = (Button)findViewById(R.id.answer1);
         answerButton1.setOnClickListener(this);
         answerButton1.setVisibility(View.GONE);
+        answerButton1.setEnabled(false);
+
 
         answerButton2 = (Button)findViewById(R.id.answer2);
         answerButton2.setOnClickListener(this);
         answerButton2.setVisibility(View.GONE);
+        answerButton2.setEnabled(false);
 
         answerButton3 = (Button)findViewById(R.id.answer3);
         answerButton3.setOnClickListener(this);
         answerButton3.setVisibility(View.GONE);
+        answerButton3.setEnabled(false);
 
         incorrect0 = (TextView) findViewById(R.id.incorrect0);
         incorrect1 = (TextView) findViewById(R.id.incorrect1);
@@ -269,6 +275,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                                                 .setListener(new AnimatorListenerAdapter(){
                                                                     @Override
                                                                     public void onAnimationEnd(Animator animation){
+                                                                        answerButton0.setEnabled(true);
+                                                                        answerButton1.setEnabled(true);
+                                                                        answerButton2.setEnabled(true);
+                                                                        answerButton3.setEnabled(true);
                                                                        previewSong();
                                                                     }
                                                                 });
@@ -340,6 +350,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 private void incorrect(){
     incorrect++;
+    answerButton0.setEnabled(false);
+    answerButton1.setEnabled(false);
+    answerButton2.setEnabled(false);
+    answerButton3.setEnabled(false);
     if(incorrect == 1){incorrect0.setTextColor(Color.RED);}
     else if(incorrect ==2){incorrect1.setTextColor(Color.RED);}
     else if(incorrect == 3){incorrect2.setTextColor(Color.RED);
