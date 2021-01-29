@@ -96,7 +96,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         answerButton0 = (Button)findViewById(R.id.answer0);
         answerButton0.setOnClickListener(this);
         answerButton0.setVisibility(View.GONE);
-        answerButton0.setEnabled(false);
+
 
 
         roundTime = (ProgressBar)findViewById(R.id.roundTime);
@@ -104,18 +104,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         answerButton1 = (Button)findViewById(R.id.answer1);
         answerButton1.setOnClickListener(this);
         answerButton1.setVisibility(View.GONE);
-        answerButton1.setEnabled(false);
 
 
         answerButton2 = (Button)findViewById(R.id.answer2);
         answerButton2.setOnClickListener(this);
         answerButton2.setVisibility(View.GONE);
-        answerButton2.setEnabled(false);
 
         answerButton3 = (Button)findViewById(R.id.answer3);
         answerButton3.setOnClickListener(this);
         answerButton3.setVisibility(View.GONE);
-        answerButton3.setEnabled(false);
 
         incorrect0 = (TextView) findViewById(R.id.incorrect0);
         incorrect1 = (TextView) findViewById(R.id.incorrect1);
@@ -243,6 +240,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void fadeAnswersIn(){
         int longAnimationDuration = getResources().getInteger(
         android.R.integer.config_longAnimTime);
+        answerButton0.setEnabled(false);
+        answerButton1.setEnabled(false);
+        answerButton2.setEnabled(false);
+        answerButton3.setEnabled(false);
         answerButton0.setAlpha(0f);
         answerButton0.setVisibility(View.VISIBLE);
         answerButton0.animate()
@@ -362,6 +363,7 @@ private void incorrect(){
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        mSpotifyAppRemote.getPlayerApi().pause();
         endGame();
     }
 }
