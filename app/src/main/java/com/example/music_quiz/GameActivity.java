@@ -91,9 +91,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_game);
-
         answerButton0 = (Button)findViewById(R.id.answer0);
         answerButton0.setOnClickListener(this);
         answerButton0.setVisibility(View.GONE);
@@ -131,6 +129,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d("CYCLE", "Started");
         playlistUri = getIntent().getStringExtra(PlaylistSelectionActivity.EXTRA_PLAYLIST_URI);
 
     }
@@ -138,6 +137,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume(){
         super.onResume();
+        Log.d("CYCLE", "Resumed");
         // Set the connection parameters
         connection.connectSpotify(this, new ConnectionCallback() {
             @Override
@@ -170,9 +170,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
+
         mSpotifyAppRemote.getPlayerApi().pause();
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
+
 
     private void connected() {
         //Play on phone
@@ -186,12 +188,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void startRound(){
         answers.clear();
-        roundTime.setMax(10000);
-        roundTime.setProgress(10000);
-        TextView scoreValue = (TextView) findViewById(R.id.score);
-        scoreValue.setText(String.valueOf(score));
+        resetTimer();
+        updateScore();
         mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
                 .setEventCallback(playerState -> {
+                    spotifyPlayerState = playerState;
                     if (!answers.contains(playerState.track.name)) {
                         answers.add(playerState.track.name);
                         song = playerState.track.name;
@@ -213,6 +214,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
 }
+    private void updateScore(){
+        TextView scoreValue = (TextView) findViewById(R.id.score);
+        scoreValue.setText(String.valueOf(score));
+    };
+    private void resetTimer(){
+        roundTime.setMax(10000);
+        roundTime.setProgress(10000);
+    }
 
     private void setAnswers(){
 
