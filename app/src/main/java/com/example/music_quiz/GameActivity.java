@@ -296,7 +296,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         roundTime.setMax(10000);
         roundTimer.start();
 
-    };
+    }
     public long nextLong(Random rng, long n) {
         // error checking and 2^x checking removed for simplicity.
         long bits, val;

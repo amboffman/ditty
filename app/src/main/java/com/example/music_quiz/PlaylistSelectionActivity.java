@@ -48,6 +48,10 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
         playlist1 = (Button) findViewById(R.id.playlist1);
         playlist2 = (Button) findViewById(R.id.playlist2);
         playlist3 = (Button) findViewById(R.id.playlist3);
+        playlist0.setVisibility(View.GONE);
+        playlist1.setVisibility(View.GONE);
+        playlist2.setVisibility(View.GONE);
+        playlist3.setVisibility(View.GONE);
     }
 
     @Override
@@ -103,6 +107,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                                                         playPlaylist(recentlyPlayedPlaylists.items[0].uri);
                                                             }
                                                     });
+                                                playlist0.setVisibility(View.VISIBLE);
                                             }
                                             else if (i == 1) {
                                                 playlist1.setText(recentlyPlayedPlaylists.items[i].title);
@@ -112,6 +117,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                                                         playPlaylist(recentlyPlayedPlaylists.items[1].uri);
                                                     }
                                                 });
+                                                playlist1.setVisibility(View.VISIBLE);
                                             }
                                             else if (i == 2) {
                                                 playlist2.setText(recentlyPlayedPlaylists.items[i].title);
@@ -121,7 +127,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                                                         playPlaylist(recentlyPlayedPlaylists.items[2].uri);
                                                     }
                                                 });
-
+                                                playlist2.setVisibility(View.VISIBLE);
                                             }
                                             else if (i == 3) {
                                                 playlist3.setText(recentlyPlayedPlaylists.items[i].title);
@@ -131,6 +137,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                                                         playPlaylist(recentlyPlayedPlaylists.items[3].uri);
                                                     }
                                                 });
+                                                playlist3.setVisibility(View.VISIBLE);
                                             }
                                         }
                                     }
