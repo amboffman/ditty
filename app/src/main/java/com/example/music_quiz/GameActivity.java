@@ -72,6 +72,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             mSpotifyAppRemote.getPlayerApi().pause();
             incorrect();
             if(incorrect != 3) {
+                fadeAnswersOut();
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response -> {
                             try {
