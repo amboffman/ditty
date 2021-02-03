@@ -60,7 +60,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TextView incorrect1;
     private TextView incorrect2;
     private ProgressBar roundTime;
-    private Boolean subscribed = false;
     private CountDownTimer roundTimer = new CountDownTimer(10000, 1000) {
         public void onTick(long millisUntilFinished) {
             int total = (int) ((float) millisUntilFinished);
@@ -165,16 +164,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        mSpotifyAppRemote.getPlayerApi().pause();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        Log.d("CYCLE", "Paused");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        mSpotifyAppRemote.getPlayerApi().pause();
+        Log.d("CYCLE", "Stopped");
+        mSpotifyAppRemote.getPlayerApi().pause().setResultCallback(
+                paused->{
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+                }
+        );
     }
 
 
@@ -201,26 +202,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     private void prepareAnswers(){
-        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
-                .setEventCallback(playerState -> {
-                    spotifyPlayerState = playerState;
-                    if (!answers.contains(playerState.track.name)) {
-                        answers.add(playerState.track.name);
-                        song = playerState.track.name;
-                        if (answers.size() < 4) {
-                            Log.d("A < 4 Skip", "Called");
-                            mSpotifyAppRemote.getPlayerApi().skipNext();
+            mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
+                    .setEventCallback(playerState -> {
+                        spotifyPlayerState = playerState;
+                        if (!answers.contains(playerState.track.name)) {
+                            answers.add(playerState.track.name);
+                            song = playerState.track.name;
+                            if (answers.size() < 4) {
+                                Log.d("A < 4 Skip", "Called");
+                                mSpotifyAppRemote.getPlayerApi().skipNext();
+                            } else {
+                                Long startMs = nextLong(new Random(playerState.track.duration), ((playerState.track.duration - 30000)));
+                                mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs)
+                                        .setResultCallback(start -> {
+                                            mSpotifyAppRemote.getPlayerApi().pause();
+                                            setAnswers();
+                                        });
+                            }
                         }
-                        else{
-                            Long startMs = nextLong(new Random(playerState.track.duration),((playerState.track.duration - 30000)));
-                            mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs)
-                            .setResultCallback(start ->{
-                            mSpotifyAppRemote.getPlayerApi().pause();
-                            setAnswers();
-                            });
-                        }
-                    }
-                });
+                    });
     }
 
    private void resetTimer(){
