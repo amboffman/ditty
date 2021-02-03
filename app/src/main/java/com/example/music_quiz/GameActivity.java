@@ -74,6 +74,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             incorrect();
             if(incorrect != 3) {
                 fadeAnswersOut();
+                Log.d("Time out skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response -> {
                             try {
@@ -206,20 +207,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     if (!answers.contains(playerState.track.name)) {
                         answers.add(playerState.track.name);
                         song = playerState.track.name;
-                        if (answers.size() < 3) {
+                        if (answers.size() < 4) {
+                            Log.d("A < 4 Skip", "Called");
                             mSpotifyAppRemote.getPlayerApi().skipNext();
                         }
-                        else if (answers.size() == 3) {
-                            mSpotifyAppRemote.getPlayerApi().skipNext()
-                                    .setResultCallback(cb->{
-                                        Long startMs = nextLong(new Random(playerState.track.duration),((playerState.track.duration - 30000)));
-                                        mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs);
-                                        mSpotifyAppRemote.getPlayerApi().pause();
-
-                                    });
-                        }
                         else{
+                            Long startMs = nextLong(new Random(playerState.track.duration),((playerState.track.duration - 30000)));
+                            mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs)
+                            .setResultCallback(start ->{
+                            mSpotifyAppRemote.getPlayerApi().pause();
                             setAnswers();
+                            });
                         }
                     }
                 });
@@ -366,24 +364,24 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-private void incorrect(){
-    incorrect++;
-    answerButton0.setEnabled(false);
-    answerButton1.setEnabled(false);
-    answerButton2.setEnabled(false);
-    answerButton3.setEnabled(false);
-    if(incorrect == 1){incorrect0.setTextColor(Color.RED);}
-    else if(incorrect ==2){incorrect1.setTextColor(Color.RED);}
-    else if(incorrect == 3){incorrect2.setTextColor(Color.RED);
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void incorrect(){
+        incorrect++;
+        answerButton0.setEnabled(false);
+        answerButton1.setEnabled(false);
+        answerButton2.setEnabled(false);
+        answerButton3.setEnabled(false);
+        if(incorrect == 1){incorrect0.setTextColor(Color.RED);}
+        else if(incorrect ==2){incorrect1.setTextColor(Color.RED);}
+        else if(incorrect == 3){incorrect2.setTextColor(Color.RED);
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mSpotifyAppRemote.getPlayerApi().pause();
+            endGame();
         }
-        mSpotifyAppRemote.getPlayerApi().pause();
-        endGame();
     }
-}
 
     public void endGame() {
         // Do something in response to button
@@ -410,6 +408,7 @@ private void incorrect(){
                     answerButton0.setText("X");;
                     incorrect();
                 }
+                Log.d("A1 Skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
                             try {
@@ -433,6 +432,7 @@ private void incorrect(){
                     answerButton1.setText("X");
                     incorrect();
                 }
+                Log.d("A2 Skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
                             try {
@@ -456,6 +456,7 @@ private void incorrect(){
                     answerButton2.setText("X");
                     incorrect();
                 }
+                Log.d("A3 Skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
                             try {
@@ -479,6 +480,7 @@ private void incorrect(){
                     answerButton3.setText("X");
                     incorrect();
                 }
+                Log.d("A4 Skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
                             try {
