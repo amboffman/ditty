@@ -60,11 +60,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TextView incorrect1;
     private TextView incorrect2;
     private ProgressBar roundTime;
-    private CountDownTimer roundTimer = new CountDownTimer(10000, 1000) {
+    private  long timeRemaining;
+    private  long savedTimeRemaining;
+    private CountDownTimer roundTimer;
+
+    private void createRoundTimer(long duration){
+    roundTimer = new CountDownTimer(duration, 1000) {
         public void onTick(long millisUntilFinished) {
-            int total = (int) ((float) millisUntilFinished);
-            roundTime.setProgress(total);
-            Log.d("Seconds Left", String.valueOf(total));
+            timeRemaining = millisUntilFinished;
+            int progress = (int) ((float) millisUntilFinished);
+            roundTime.setProgress(progress);
+            Log.d("Seconds Left", String.valueOf(progress));
         }
 
         public void onFinish() {
@@ -86,6 +92,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+    }
     Connection connection = new Connection();
 
 
@@ -136,6 +143,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("CYCLE", "Restarted");
+
+    }
+    @Override
     protected void onResume(){
         super.onResume();
         Log.d("CYCLE", "Resumed");
@@ -165,6 +178,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         super.onPause();
         Log.d("CYCLE", "Paused");
+        savedTimeRemaining = timeRemaining;
+        roundTimer.cancel();
     }
 
     @Override
@@ -224,8 +239,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
    private void resetTimer(){
-        roundTime.setMax(10000);
-        roundTime.setProgress(10000);
+       roundTime.setMax(10000);
+        if(savedTimeRemaining > 0){
+            createRoundTimer(savedTimeRemaining);
+            savedTimeRemaining = 0;
+        }
+        else {
+            createRoundTimer(10000);
+        }
+
     }
 
     private void setAnswers(){
