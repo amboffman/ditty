@@ -25,6 +25,7 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.ListItem;
 import com.spotify.protocol.types.PlayerState;
+import com.spotify.protocol.types.Track;
 import com.spotify.protocol.types.Uri;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private static final String REDIRECT_URI = "app://music.quiz";
     private static SpotifyAppRemote mSpotifyAppRemote;
     public PlayerState spotifyPlayerState;
-    private String song;
+    private Track song;
     private String playlistUri;
     private ArrayList<String> answers = new ArrayList<String>();
     public int score = 0;
@@ -60,6 +61,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TextView incorrect1;
     private TextView incorrect2;
     private ProgressBar roundTime;
+    private Boolean restarting = false;
+    private long startMs;
     private  long timeRemaining;
     private  long savedTimeRemaining;
     private CountDownTimer roundTimer;
@@ -134,6 +137,27 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("CYCLE", "Restarted");
+        restarting = true;
+        //Update answer button to song title
+        answerButton0.setBackgroundColor(buttonBlue);
+        answerButton0.setText(this.answers.get(0));
+
+        answerButton1.setBackgroundColor(buttonBlue);
+        answerButton1.setText(this.answers.get(1));
+
+        answerButton2.setBackgroundColor(buttonBlue);
+        answerButton2.setText(this.answers.get(2));
+
+        answerButton3.setBackgroundColor(buttonBlue);
+        answerButton3.setText(this.answers.get(3));
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -142,12 +166,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("CYCLE", "Restarted");
-
-    }
     @Override
     protected void onResume(){
         super.onResume();
@@ -206,28 +224,34 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startRound(){
-        answers.clear();
         resetTimer();
+        answers.clear();
         updateScore();
-        prepareAnswers();
+        if(restarting){
+            resumeRound();
+        }
+        else {
+            prepareNewRound();
+        }
 }
     private void updateScore(){
         TextView scoreValue = (TextView) findViewById(R.id.score);
         scoreValue.setText(String.valueOf(score));
     };
 
-    private void prepareAnswers(){
+    private void prepareNewRound(){
+        Log.d("Round Type", "New");
             mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
                     .setEventCallback(playerState -> {
                         spotifyPlayerState = playerState;
                         if (!answers.contains(playerState.track.name)) {
                             answers.add(playerState.track.name);
-                            song = playerState.track.name;
+                            song = playerState.track;
                             if (answers.size() < 4) {
                                 Log.d("A < 4 Skip", "Called");
                                 mSpotifyAppRemote.getPlayerApi().skipNext();
                             } else {
-                                Long startMs = nextLong(new Random(playerState.track.duration), ((playerState.track.duration - 30000)));
+                                startMs = nextLong(new Random(playerState.track.duration), ((playerState.track.duration - 30000)));
                                 mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs)
                                         .setResultCallback(start -> {
                                             mSpotifyAppRemote.getPlayerApi().pause();
@@ -238,6 +262,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     });
     }
 
+    private void resumeRound(){
+        Log.d("Round Type", "Resume");
+        mSpotifyAppRemote.getPlayerApi().queue(song.uri)
+                .setResultCallback(queued->{
+                    mSpotifyAppRemote.getPlayerApi().skipNext()
+                            .setResultCallback(skipped->{
+                                mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs)
+                                .setResultCallback(seeked ->{
+                                    restarting = false;
+                                })
+                                ;
+                                }
+
+                        );
+                    });
+    }
    private void resetTimer(){
        roundTime.setMax(10000);
         if(savedTimeRemaining > 0){
@@ -252,25 +292,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setAnswers(){
 
-        Log.d("Answers", String.valueOf(answers));
+        Log.d("Answers ", String.valueOf(answers));
         Collections.shuffle(answers);
-        if(!answers.contains(this.song)){
-        int randomAnswerIndex = new Random().nextInt(answers.size()+1);
-        answers.set(randomAnswerIndex, this.song);
-        }
+//        if(!answers.contains(this.song)){
+//        int randomAnswerIndex = new Random().nextInt(answers.size()+1);
+//        answers.set(randomAnswerIndex, this.song);
+//        }
 
         //Update answer button to song title
         answerButton0.setBackgroundColor(buttonBlue);
-        answerButton0.setText(String.valueOf(this.answers.get(0)));
+        answerButton0.setText(this.answers.get(0));
 
         answerButton1.setBackgroundColor(buttonBlue);
-        answerButton1.setText(String.valueOf(this.answers.get(1)));
+        answerButton1.setText(this.answers.get(1));
 
         answerButton2.setBackgroundColor(buttonBlue);
-        answerButton2.setText(String.valueOf(this.answers.get(2)));
+        answerButton2.setText(this.answers.get(2));
 
         answerButton3.setBackgroundColor(buttonBlue);
-        answerButton3.setText(String.valueOf(this.answers.get(3)));
+        answerButton3.setText(this.answers.get(3));
         fadeAnswersIn();
     }
 
@@ -418,14 +458,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         roundTimer.cancel();
         switch (v.getId()){
             case R.id.answer0:
-                if(answerButton0.getText().equals(song)) {
+                if(answerButton0.getText().equals(song.name)) {
                     score++;
                     answerButton0.setBackgroundColor(Color.GREEN);
                     answerButton0.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                 }
                 else{
-                    Log.d("Wrong, it was..", String.valueOf(song));
+                    Log.d("Wrong, it was..", String.valueOf(song.name));
                     answerButton0.setBackgroundColor(Color.RED);
                     answerButton0.setText("X");;
                     incorrect();
@@ -442,14 +482,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
             case R.id.answer1:
-                if(answerButton1.getText().equals(song)) {
+                if(answerButton1.getText().equals(song.name)) {
                     score++;
                     answerButton1.setBackgroundColor(Color.GREEN);
                     answerButton1.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                 }
                 else{
-                    Log.d("Wrong, it was..", String.valueOf(song));
+                    Log.d("Wrong, it was..", String.valueOf(song.name));
                     answerButton1.setBackgroundColor(Color.RED);
                     answerButton1.setText("X");
                     incorrect();
@@ -466,14 +506,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
             case R.id.answer2:
-                if(answerButton2.getText() == song) {
+                if(answerButton2.getText().equals(song.name)) {
                     score++;
                     answerButton2.setBackgroundColor(Color.GREEN);
                     answerButton2.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                 }
                 else{
-                    Log.d("Wrong, it was..", String.valueOf(song));
+                    Log.d("Wrong, it was..", String.valueOf(song.name));
                     answerButton2.setBackgroundColor(Color.RED);
                     answerButton2.setText("X");
                     incorrect();
@@ -490,14 +530,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
             case R.id.answer3:
-                if(answerButton3.getText() == song) {
+                if(answerButton3.getText().equals(song.name)) {
                     score++;
                     answerButton3.setBackgroundColor(Color.GREEN);
                     answerButton3.setText(checkedMark);
                     Log.d("CORRECT! Your score", String.valueOf(score));
                 }
                 else{
-                    Log.d("Wrong, it was..", String.valueOf(song));
+                    Log.d("Wrong, it was..", String.valueOf(song.name));
                     answerButton3.setBackgroundColor(Color.RED);
                     answerButton3.setText("X");
                     incorrect();
