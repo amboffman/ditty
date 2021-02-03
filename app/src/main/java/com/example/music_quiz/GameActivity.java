@@ -60,6 +60,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TextView incorrect1;
     private TextView incorrect2;
     private ProgressBar roundTime;
+    private Boolean subscribed = false;
     private CountDownTimer roundTimer = new CountDownTimer(10000, 1000) {
         public void onTick(long millisUntilFinished) {
             int total = (int) ((float) millisUntilFinished);
@@ -92,11 +93,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        incorrect = 0;
+
         answerButton0 = (Button)findViewById(R.id.answer0);
         answerButton0.setOnClickListener(this);
         answerButton0.setVisibility(View.GONE);
-
-
 
         roundTime = (ProgressBar)findViewById(R.id.roundTime);
 
@@ -182,14 +183,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         //Shuffle playlist
         mSpotifyAppRemote.getPlayerApi().setShuffle(true);
         // Play
-        mSpotifyAppRemote.getPlayerApi().play(playlistUri);
+        mSpotifyAppRemote.getPlayerApi().play(playlistUri).setResultCallback(playing->{
         startRound();
-
+        });
     }
+
     private void startRound(){
         answers.clear();
         resetTimer();
         updateScore();
+        prepareAnswers();
+}
+    private void updateScore(){
+        TextView scoreValue = (TextView) findViewById(R.id.score);
+        scoreValue.setText(String.valueOf(score));
+    };
+
+    private void prepareAnswers(){
         mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
                 .setEventCallback(playerState -> {
                     spotifyPlayerState = playerState;
@@ -201,24 +211,21 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         else if (answers.size() == 3) {
                             mSpotifyAppRemote.getPlayerApi().skipNext()
-                            .setResultCallback(cb->{
-                                Long startMs = nextLong(new Random(playerState.track.duration),((playerState.track.duration - 30000)));
-                                mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs);
-                                mSpotifyAppRemote.getPlayerApi().pause();
+                                    .setResultCallback(cb->{
+                                        Long startMs = nextLong(new Random(playerState.track.duration),((playerState.track.duration - 30000)));
+                                        mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs);
+                                        mSpotifyAppRemote.getPlayerApi().pause();
 
-                            });
+                                    });
                         }
                         else{
                             setAnswers();
-                    }
+                        }
                     }
                 });
-}
-    private void updateScore(){
-        TextView scoreValue = (TextView) findViewById(R.id.score);
-        scoreValue.setText(String.valueOf(score));
-    };
-    private void resetTimer(){
+    }
+
+   private void resetTimer(){
         roundTime.setMax(10000);
         roundTime.setProgress(10000);
     }
