@@ -172,6 +172,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume(){
         super.onResume();
         Log.d("CYCLE", "Resumed");
+        muteAudio();
         // Set the connection parameters
         connection.connectSpotify(this, new ConnectionCallback() {
             @Override
@@ -221,7 +222,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mSpotifyAppRemote.getPlayerApi().setShuffle(true);
         // Play
         mSpotifyAppRemote.getPlayerApi().play(playlistUri).setResultCallback(playing->{
-            muteAudio();
         startRound();
         });
     }
@@ -229,7 +229,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void startRound(){
         resetTimer();
         answers.clear();
-
         updateScore();
         if(restarting){
             resumeRound();
@@ -274,7 +273,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             .setResultCallback(skipped->{
                                 mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs)
                                 .setResultCallback(seeked ->{
-                                    unMuteAudio();
+                                    previewSong();
                                     restarting = false;
                                 })
                                 ;
