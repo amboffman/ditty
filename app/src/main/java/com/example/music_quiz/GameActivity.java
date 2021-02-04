@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -90,6 +91,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                            muteAudio();
                             startRound();
                         });
             }
@@ -219,6 +221,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mSpotifyAppRemote.getPlayerApi().setShuffle(true);
         // Play
         mSpotifyAppRemote.getPlayerApi().play(playlistUri).setResultCallback(playing->{
+            muteAudio();
         startRound();
         });
     }
@@ -226,6 +229,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void startRound(){
         resetTimer();
         answers.clear();
+
         updateScore();
         if(restarting){
             resumeRound();
@@ -270,6 +274,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             .setResultCallback(skipped->{
                                 mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs)
                                 .setResultCallback(seeked ->{
+                                    unMuteAudio();
                                     restarting = false;
                                 })
                                 ;
@@ -370,6 +375,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void previewSong(){
         mSpotifyAppRemote.getPlayerApi().resume();
+        unMuteAudio();
         roundTime.setMax(10000);
         roundTimer.start();
 
@@ -470,6 +476,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     answerButton0.setText("X");;
                     incorrect();
                 }
+                muteAudio();
                 Log.d("A1 Skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -494,6 +501,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     answerButton1.setText("X");
                     incorrect();
                 }
+                muteAudio();
                 Log.d("A2 Skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -518,6 +526,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     answerButton2.setText("X");
                     incorrect();
                 }
+                muteAudio();
                 Log.d("A3 Skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -542,6 +551,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     answerButton3.setText("X");
                     incorrect();
                 }
+                muteAudio();
                 Log.d("A4 Skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
@@ -558,5 +568,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         }
         fadeAnswersOut();
+    }
+
+    public void muteAudio(){
+        AudioManager audio;
+        audio = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            audio.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+        } else {
+            audio.setStreamMute(AudioManager.STREAM_MUSIC, true);
+        }
+    }
+
+    public void unMuteAudio(){
+        AudioManager audio;
+        audio = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            audio.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
+        } else {
+            audio.setStreamMute(AudioManager.STREAM_MUSIC, false);
+        }
     }
 }
