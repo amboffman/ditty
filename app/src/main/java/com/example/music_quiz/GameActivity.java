@@ -225,6 +225,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startRound(){
+        fadeAnswersOut();
         resetTimer();
         answers.clear();
         updateScore();
@@ -498,7 +499,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(1500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -523,7 +524,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(1500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -573,7 +574,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(1500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -584,7 +585,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
         }
-        fadeAnswersOut();
+//        fadeAnswersOut();
     }
 
     public void muteAudio(){
