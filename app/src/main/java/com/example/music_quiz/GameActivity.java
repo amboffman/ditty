@@ -106,7 +106,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         incorrect = 0;
-
+        playlistUri = getIntent().getStringExtra(PlaylistSelectionActivity.EXTRA_PLAYLIST_URI);
         answerButton0 = (Button)findViewById(R.id.answer0);
         answerButton0.setOnClickListener(this);
         answerButton0.setVisibility(View.GONE);
@@ -164,8 +164,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         Log.d("CYCLE", "Started");
-        playlistUri = getIntent().getStringExtra(PlaylistSelectionActivity.EXTRA_PLAYLIST_URI);
-
     }
 
     @Override
@@ -437,6 +435,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         answerButton1.setEnabled(false);
         answerButton2.setEnabled(false);
         answerButton3.setEnabled(false);
+        highlightAnswer();
         if(incorrect == 1){incorrect0.setTextColor(Color.RED);}
         else if(incorrect ==2){incorrect1.setTextColor(Color.RED);}
         else if(incorrect == 3){incorrect2.setTextColor(Color.RED);
@@ -449,7 +448,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             endGame();
         }
     }
+    private void highlightAnswer(){
+        int correctIndex = answers.indexOf(song.name);
+        Log.d("Highlighting Answer", String.valueOf(correctIndex));
+        switch(correctIndex){
+            case 0:
+                answerButton0.setBackgroundColor(Color.GREEN);
+                break;
+                case 1:
+                answerButton1.setBackgroundColor(Color.GREEN);
+                    break;
+            case 2:
+                answerButton2.setBackgroundColor(Color.GREEN);
+                break;
+            case 3:
+                answerButton3.setBackgroundColor(Color.GREEN);
+            default:
+                break;
+        }
 
+    };
     public void endGame() {
         // Do something in response to button
         roundTimer.cancel();
@@ -530,7 +548,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response->{
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(1500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -588,4 +606,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             audio.setStreamMute(AudioManager.STREAM_MUSIC, false);
         }
     }
+
+    @Override
+   protected void onDestroy(){
+      super.onDestroy();
+      Log.d("CYCLE", "Destroyed");
+    };
 }

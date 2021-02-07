@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Startup Connection:", "Failed");
                 if(err.equals("connection err")){
                     //Spotify login
+
                 }
                 else if(err.equals("capabilities err")){
                     //Premium spotify needed
