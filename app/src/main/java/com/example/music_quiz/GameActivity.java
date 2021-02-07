@@ -440,18 +440,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if(incorrect == 1){incorrect0.setTextColor(Color.RED);}
         else if(incorrect ==2){incorrect1.setTextColor(Color.RED);}
         else if(incorrect == 3){incorrect2.setTextColor(Color.RED);
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            mSpotifyAppRemote.getPlayerApi().pause();
+            mSpotifyAppRemote.getPlayerApi().pause()
+            .setResultCallback(paused->{
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             endGame();
+            });
         }
     }
     private void highlightAnswer(){
         int correctIndex = answers.indexOf(song.name);
-        Log.d("Highlighting Answer", String.valueOf(correctIndex));
         switch(correctIndex){
             case 0:
                 answerButton0.setBackgroundColor(Color.GREEN);
