@@ -58,10 +58,31 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(err.equals("capabilities err")){
                     //Premium spotify needed
+upgradeToPremium();
                 }
             }
         });
 
+    }
+
+    private void upgradeToPremium(){
+        String url = "https://www.spotify.com/us/premium/";
+
+        final Intent premiumIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        TextView errorInfo = (TextView) findViewById(R.id.info);
+        errorInfo.setText("Spotify Premium is required for this application.");
+        Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton);
+        downloadSpotifyButton.setBackgroundColor(Color.parseColor("#31a744"));
+        downloadSpotifyButton.setText("Upgrade to Spotify Premium");
+        downloadSpotifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (premiumIntent != null) {
+                    startActivity(premiumIntent);
+                }
+            }
+        });
+        downloadSpotifyButton.setVisibility(View.VISIBLE);
     }
     private void downloadSpotify(){
         String url;
@@ -76,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent appstoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         TextView errorInfo = (TextView) findViewById(R.id.info);
-        errorInfo.setText("Please download the Spotify app to play");
+        errorInfo.setText("The Spotify app is required for this application.");
         Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton);
         downloadSpotifyButton.setBackgroundColor(Color.parseColor("#31a744"));
         downloadSpotifyButton.setText("Download Spotify");
@@ -106,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     private void spotifyLogin(){
         Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.spotify.music");
         TextView errorInfo = (TextView) findViewById(R.id.info);
-        errorInfo.setText("Please log into the Spotify app to play");
+        errorInfo.setText("Please log into the Spotify app.");
         Button spotifyLoginButton = (Button) findViewById(R.id.actionButton);
         spotifyLoginButton.setBackgroundColor(Color.parseColor("#31a744"));
         spotifyLoginButton.setText("Spotify Login");
