@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -47,12 +48,41 @@ public class MainActivity extends AppCompatActivity {
                     //Spotify login
                     spotifyLogin();
                 }
+                else if(err.equals("no spotify connection err")){
+                    downloadSpotify();
+                }
                 else if(err.equals("capabilities err")){
                     //Premium spotify needed
                 }
             }
         });
 
+    }
+    private void downloadSpotify(){
+        String url;
+
+        try {
+            //Check whether Google Play store is installed or not:
+            this.getPackageManager().getPackageInfo("com.android.vending", 0);
+
+            url = "market://details?id=" + "com.spotify.music";
+        } catch ( final Exception e ) {
+            url = "https://play.google.com/store/apps/details?id=" + "com.spotify.music";
+        }
+
+        final Intent appstoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton);
+        downloadSpotifyButton.setBackgroundColor(Color.parseColor("#31a744"));
+        downloadSpotifyButton.setText("Download Spotify");
+        downloadSpotifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (appstoreIntent != null) {
+                    startActivity(appstoreIntent);
+                }
+            }
+        });
+        downloadSpotifyButton.setVisibility(View.VISIBLE);
     }
     private void qualifyPlayer(){
         Button startGameButton = (Button) findViewById(R.id.actionButton);

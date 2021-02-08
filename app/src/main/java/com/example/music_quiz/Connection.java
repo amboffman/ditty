@@ -9,6 +9,10 @@ import androidx.annotation.VisibleForTesting;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.android.appremote.api.error.CouldNotFindSpotifyApp;
+import com.spotify.android.appremote.api.error.LoggedOutException;
+import com.spotify.android.appremote.api.error.NotLoggedInException;
+import com.spotify.android.appremote.api.error.SpotifyConnectionTerminatedException;
 import com.spotify.android.appremote.api.error.UnsupportedFeatureVersionException;
 
 public class Connection {
@@ -37,8 +41,15 @@ public class Connection {
             @Override
             public void onFailure(Throwable throwable) {
                 Log.e("MainActivity", throwable.getMessage(), throwable);
-            cb.onError("connection err");
-                // Something went wrong when attempting to connect! Handle errors here
+                if(throwable instanceof NotLoggedInException){
+                    cb.onError("logged out connection err");
+                }
+                else if(throwable instanceof CouldNotFindSpotifyApp) {
+                    cb.onError("no spotify connection err");
+                }
+                else if(throwable instanceof SpotifyConnectionTerminatedException){
+                    cb.onError("terminated connection err");
+                }
             }
         });
     }
