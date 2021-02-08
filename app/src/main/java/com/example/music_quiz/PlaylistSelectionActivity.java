@@ -69,18 +69,16 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
             @Override
             public void onError(String err) {
                 Log.e("Quiz Connection:", "Failed");
-                if(err.equals("connection err")){
-                    //Spotify login
-                }
-                else if(err.equals("capabilities err")){
-                    //Premium spotify needed
-                }
+                returnToHomeScreen();
             }
         });
 
 
     }
-
+    private void returnToHomeScreen(){
+        Intent mainActivity = new Intent(this, MainActivity.class);
+        startActivity(mainActivity);
+    }
     public void playPlaylist (String playlistURI){
             // Do something in response to button
         Log.d("PLAYING", String.valueOf(playlistURI));

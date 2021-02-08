@@ -183,12 +183,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onError(String err) {
                 Log.e("Quiz Connection:", "Failed");
-                if(err.equals("connection err")){
-                    //Spotify login
-                }
-                else if(err.equals("capabilities err")){
-                    //Premium spotify needed
-                }
+                returnToHomeScreen();
             }
         });
     }
@@ -293,6 +288,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void returnToHomeScreen(){
+        Intent mainActivity = new Intent(this, MainActivity.class);
+        startActivity(mainActivity);
+    }
     private void setAnswers(){
 
         Log.d("Answers ", String.valueOf(answers));
