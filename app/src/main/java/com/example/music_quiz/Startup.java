@@ -11,13 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 public class Startup extends AppCompatActivity {
-    Button start_game_button = (Button) findViewById(R.id.startGame);
+    Button start_game_button = (Button) findViewById(R.id.actionButton);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        start_game_button = (Button) findViewById(R.id.startGame);
+        start_game_button = (Button) findViewById(R.id.actionButton);
         start_game_button.setVisibility(View.GONE);
         start_game_button.setOnClickListener(new View.OnClickListener() {
             @Override
