@@ -26,7 +26,8 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     private ArrayList playlistTitles = new ArrayList();
     private  ArrayList playlistImages = new ArrayList();
     public static final String EXTRA_PLAYLIST_URI = "com.example.music_quiz.PLAYLISTURI";
-
+    public static final String EXTRA_MODE= "com.example.music_quiz.MODE";
+    private boolean endlessMode;
     Button playlist0;
     Button playlist1;
     Button playlist2;
@@ -38,7 +39,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playlist_selection);
-
+        endlessMode = getIntent().getExtras().getBoolean(MainActivity.EXTRA_MESSAGE_MODE);
     }
 
     @Override
@@ -84,6 +85,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
         Log.d("PLAYING", String.valueOf(playlistURI));
             Intent gameActivity = new Intent(this, GameActivity.class);
             gameActivity.putExtra(EXTRA_PLAYLIST_URI, playlistURI);
+            gameActivity.putExtra(EXTRA_MODE, endlessMode);
             startActivity(gameActivity);
     };
 

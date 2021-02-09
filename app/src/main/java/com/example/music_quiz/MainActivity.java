@@ -11,24 +11,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "com.example.music_quiz.START";
+    public static final String EXTRA_MESSAGE_MODE = "com.example.music_quiz.MODE";
+    public boolean endlessMode = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button actionButton = (Button) findViewById(R.id.actionButton);
+        Button actionButton = (Button) findViewById(R.id.actionButton0);
         actionButton.setVisibility(View.GONE);
+        Button actionButton2 = (Button) findViewById(R.id.actionButton1);
+        actionButton2.setVisibility(View.GONE);
     }
 
     private void startGame() {
         // Do something in response to button
         Intent playlistSelectionActivity = new Intent(this, PlaylistSelectionActivity.class);
         playlistSelectionActivity.putExtra(EXTRA_MESSAGE, "start");
+        playlistSelectionActivity.putExtra(EXTRA_MESSAGE_MODE, endlessMode);
         startActivity(playlistSelectionActivity);
     }
 
@@ -71,7 +74,7 @@ upgradeToPremium();
         final Intent premiumIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         TextView errorInfo = (TextView) findViewById(R.id.info);
         errorInfo.setText("Spotify Premium is required for this application.");
-        Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton);
+        Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton0);
         downloadSpotifyButton.setBackgroundColor(Color.parseColor("#31a744"));
         downloadSpotifyButton.setText("Upgrade to Spotify Premium");
         downloadSpotifyButton.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +101,7 @@ upgradeToPremium();
         final Intent appstoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         TextView errorInfo = (TextView) findViewById(R.id.info);
         errorInfo.setText("The Spotify app is required for this application.");
-        Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton);
+        Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton0);
         downloadSpotifyButton.setBackgroundColor(Color.parseColor("#31a744"));
         downloadSpotifyButton.setText("Download Spotify");
         downloadSpotifyButton.setOnClickListener(new View.OnClickListener() {
@@ -112,23 +115,35 @@ upgradeToPremium();
         downloadSpotifyButton.setVisibility(View.VISIBLE);
     }
     private void qualifyPlayer(){
-        Button startGameButton = (Button) findViewById(R.id.actionButton);
-        startGameButton.setBackgroundColor(Color.parseColor("#31a744"));
-        startGameButton.setText("Start Game");
-        startGameButton.setOnClickListener(new View.OnClickListener() {
+        Button challengeModeButton = (Button) findViewById(R.id.actionButton0);
+        challengeModeButton.setBackgroundColor(Color.parseColor("#31a744"));
+        challengeModeButton.setText("Challenge Mode");
+        challengeModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                endlessMode = false;
                 startGame();
             }
         });
-        startGameButton.setVisibility(View.VISIBLE);
+        Button endlessModeButton = (Button) findViewById(R.id.actionButton1);
+        endlessModeButton.setBackgroundColor(Color.parseColor("#31a744"));
+        endlessModeButton.setText("Endless Mode");
+        endlessModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endlessMode = true;
+                startGame();
+            }
+        });
+        challengeModeButton.setVisibility(View.VISIBLE);
+        endlessModeButton.setVisibility(View.VISIBLE);
     }
 
     private void spotifyLogin(){
         Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.spotify.music");
         TextView errorInfo = (TextView) findViewById(R.id.info);
         errorInfo.setText("Please log into the Spotify app.");
-        Button spotifyLoginButton = (Button) findViewById(R.id.actionButton);
+        Button spotifyLoginButton = (Button) findViewById(R.id.actionButton0);
         spotifyLoginButton.setBackgroundColor(Color.parseColor("#31a744"));
         spotifyLoginButton.setText("Spotify Login");
         spotifyLoginButton.setOnClickListener(new View.OnClickListener() {

@@ -67,6 +67,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private  long timeRemaining;
     private  long savedTimeRemaining;
     private CountDownTimer roundTimer;
+    private boolean endlessMode;
 
     private void createRoundTimer(long duration){
     roundTimer = new CountDownTimer(duration, 1000) {
@@ -105,6 +106,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        endlessMode = getIntent().getExtras().getBoolean(PlaylistSelectionActivity.EXTRA_MODE);
         incorrect = 0;
         playlistUri = getIntent().getStringExtra(PlaylistSelectionActivity.EXTRA_PLAYLIST_URI);
         answerButton0 = (Button)findViewById(R.id.answer0);
@@ -130,6 +132,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         incorrect1 = (TextView) findViewById(R.id.incorrect1);
         incorrect2 = (TextView) findViewById(R.id.incorrect2);
 
+        if(endlessMode){
+            incorrect0.setVisibility(View.GONE);
+            incorrect1.setVisibility(View.GONE);
+            incorrect2.setVisibility(View.GONE);
+        }
         Button end_game_button = (Button)findViewById(R.id.endGameButton);
         end_game_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -438,7 +445,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         highlightAnswer();
         if(incorrect == 1){incorrect0.setTextColor(Color.RED);}
         else if(incorrect ==2){incorrect1.setTextColor(Color.RED);}
-        else if(incorrect == 3){incorrect2.setTextColor(Color.RED);
+        else if(incorrect == 3 && !endlessMode){incorrect2.setTextColor(Color.RED);
             mSpotifyAppRemote.getPlayerApi().pause()
             .setResultCallback(paused->{
                 try {
