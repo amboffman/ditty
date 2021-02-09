@@ -87,12 +87,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("Time out skip", "Called");
                 mSpotifyAppRemote.getPlayerApi().skipNext()
                         .setResultCallback(response -> {
+                            muteAudio();
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(1500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            muteAudio();
                             startRound();
                         });
             }
@@ -437,7 +437,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void incorrect(){
-        incorrect++;
+        if(!endlessMode) {
+            incorrect++;
+        }
         answerButton0.setEnabled(false);
         answerButton1.setEnabled(false);
         answerButton2.setEnabled(false);
@@ -445,7 +447,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         highlightAnswer();
         if(incorrect == 1){incorrect0.setTextColor(Color.RED);}
         else if(incorrect ==2){incorrect1.setTextColor(Color.RED);}
-        else if(incorrect == 3 && !endlessMode){incorrect2.setTextColor(Color.RED);
+        else if(incorrect == 3){incorrect2.setTextColor(Color.RED);
             mSpotifyAppRemote.getPlayerApi().pause()
             .setResultCallback(paused->{
                 try {
