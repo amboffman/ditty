@@ -12,4 +12,8 @@
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
+    <color name="seafoam_green">#43d87d</color>
+    <color name="emerald">#3AC061</color>
+    <color name="green">#31a744</color>
+    <color name="colorTransparent">#00ffffff</color>
 </resources>

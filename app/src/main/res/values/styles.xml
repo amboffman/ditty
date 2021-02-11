@@ -1,7 +1,11 @@
 <resources>
 
     <style name="Widget.Theme.Musicquiz.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="colorPrimary">@color/seafoam_green</item>
+        <item name="colorPrimaryDark">@color/colorTransparent</item>
+        <item name="colorAccent">@color/green</item>
         <item name="android:background">@color/black_overlay</item>
+
     </style>
 
     <style name="Widget.Theme.Musicquiz.ButtonBar.Fullscreen" parent="">
