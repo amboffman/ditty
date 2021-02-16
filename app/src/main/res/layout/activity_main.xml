@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.718" />
+        app:layout_constraintVertical_bias="0.861" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -38,22 +38,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.384">
+        app:layout_constraintVertical_bias="0.571">
 
         <LinearLayout
             android:id="@+id/action_buttons"
             android:layout_width="229dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="91dp"
+            tools:layout_editor_absoluteY="267dp">
 
             <Button
                 android:id="@+id/actionButton0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="Start Game"
-                app:backgroundTint="#4CAF50" />
+                android:background="@color/emerald"
+                android:text="Start Game" />
 
             <TextView
                 android:id="@+id/info"
@@ -66,9 +68,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Start Game"
-                app:backgroundTint="#4CAF50" />
+                android:background="@color/emerald"
+                android:text="Start Game" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="145dp"
+        android:layout_height="127dp"
+        app:layout_constraintBottom_toTopOf="@+id/Playlist_Selection"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/music_icon" />
+
+    <TextView
+        android:id="@+id/spotifyAttribution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:text="Music provided by"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.946"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="81dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        app:layout_constraintVertical_bias="0.986"
+        app:srcCompat="@drawable/spotify_logo_rgb_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -86,7 +86,7 @@ upgradeToPremium();
         TextView errorInfo = (TextView) findViewById(R.id.info);
         errorInfo.setText("Spotify Premium is required for this application.");
         Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton0);
-        downloadSpotifyButton.setBackgroundColor(Color.parseColor("#31a744"));
+        downloadSpotifyButton.setBackgroundResource(R.color.emerald);
         downloadSpotifyButton.setText("Upgrade to Spotify Premium");
         downloadSpotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +113,7 @@ upgradeToPremium();
         TextView errorInfo = (TextView) findViewById(R.id.info);
         errorInfo.setText("The Spotify app is required for this application.");
         Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton0);
-        downloadSpotifyButton.setBackgroundColor(Color.parseColor("#31a744"));
+        downloadSpotifyButton.setBackgroundResource(R.color.emerald);
         downloadSpotifyButton.setText("Download Spotify");
         downloadSpotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +127,7 @@ upgradeToPremium();
     }
     private void qualifyPlayer(){
         Button challengeModeButton = (Button) findViewById(R.id.actionButton0);
-        challengeModeButton.setBackgroundColor(Color.parseColor("#31a744"));
+        challengeModeButton.setBackgroundResource(R.color.emerald);
         challengeModeButton.setText("Challenge Mode");
         challengeModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +137,7 @@ upgradeToPremium();
             }
         });
         Button endlessModeButton = (Button) findViewById(R.id.actionButton1);
-        endlessModeButton.setBackgroundColor(Color.parseColor("#31a744"));
+        endlessModeButton.setBackgroundResource(R.color.emerald);
         endlessModeButton.setText("Endless Mode");
         endlessModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,7 +155,7 @@ upgradeToPremium();
         TextView errorInfo = (TextView) findViewById(R.id.info);
         errorInfo.setText("Please log into the Spotify app.");
         Button spotifyLoginButton = (Button) findViewById(R.id.actionButton0);
-        spotifyLoginButton.setBackgroundColor(Color.parseColor("#31a744"));
+        spotifyLoginButton.setBackgroundResource(R.color.emerald);
         spotifyLoginButton.setText("Spotify Login");
         spotifyLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
