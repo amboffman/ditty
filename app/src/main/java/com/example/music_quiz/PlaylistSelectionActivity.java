@@ -2,32 +2,39 @@ package com.example.music_quiz;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.CallResult;
 import com.spotify.protocol.types.Image;
 import com.spotify.protocol.types.ListItem;
+import com.spotify.protocol.types.ListItems;
 
 import java.util.ArrayList;
 
 public class PlaylistSelectionActivity extends AppCompatActivity {
     private SpotifyAppRemote mSpotifyAppRemote;
-    private ListItem[] playlists;
+    private ListItems playlists;
     public ArrayList playlistUris = new ArrayList();
     private ArrayList playlistTitles = new ArrayList();
     private  ArrayList playlistImages = new ArrayList();
     public static final String EXTRA_PLAYLIST_URI = "com.example.music_quiz.PLAYLISTURI";
     public static final String EXTRA_MODE= "com.example.music_quiz.MODE";
     private boolean endlessMode;
+    GridView playlistGrid;
     Button playlist0;
     Button playlist1;
     Button playlist2;
@@ -39,6 +46,17 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playlist_selection);
+        getWindow().getDecorView()
+                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        ConstraintLayout layout = findViewById(R.id.playlistSelectionScreen);
+        layout.setBackgroundResource(R.drawable.gradient_animation);
+        AnimationDrawable animDrawable = (AnimationDrawable) layout.getBackground();
+        animDrawable.setEnterFadeDuration(10);
+        animDrawable.setExitFadeDuration(5000);
+        animDrawable.start();
+        playlistGrid = findViewById(R.id.playlists);
+
+
         endlessMode = getIntent().getExtras().getBoolean(MainActivity.EXTRA_MESSAGE_MODE);
     }
 
@@ -94,50 +112,68 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     private void fetchPlaylists(){
         mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
                 .setResultCallback(playlistRecommendations -> {
-                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(playlistRecommendations.items[0], 4, 0)
+                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(playlistRecommendations.items[0], 20, 0)
                             .setResultCallback(
                                     recentlyPlayedPlaylists -> {
-                                        for(int i=0; i < 4; i++){
+//                                        for(int i=0; i < 4; i++){
+//                                            playlistUris.add(recentlyPlayedPlaylists.items[i].uri);
+//                                            if (i == 0) {
+//                                                playlist0.setText(recentlyPlayedPlaylists.items[i].title);
+//                                                playlist0.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View v) {
+//                                                        playPlaylist(recentlyPlayedPlaylists.items[0].uri);
+//                                                            }
+//                                                    });
+//                                                playlist0.setVisibility(View.VISIBLE);
+//                                            }
+//                                            else if (i == 1) {
+//                                                playlist1.setText(recentlyPlayedPlaylists.items[i].title);
+//                                                playlist1.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View v) {
+//                                                        playPlaylist(recentlyPlayedPlaylists.items[1].uri);
+//                                                    }
+//                                                });
+//                                                playlist1.setVisibility(View.VISIBLE);
+//                                            }
+//                                            else if (i == 2) {
+//                                                playlist2.setText(recentlyPlayedPlaylists.items[i].title);
+//                                                playlist2.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View v) {
+//                                                        playPlaylist(recentlyPlayedPlaylists.items[2].uri);
+//                                                    }
+//                                                });
+//                                                playlist2.setVisibility(View.VISIBLE);
+//                                            }
+//                                            else if (i == 3) {
+//                                                playlist3.setText(recentlyPlayedPlaylists.items[i].title);
+//                                                playlist3.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View v) {
+//                                                        playPlaylist(recentlyPlayedPlaylists.items[3].uri);
+//                                                    }
+//                                                });
+//                                                playlist3.setVisibility(View.VISIBLE);
+//                                            }
+//                                        }
+                                        for(int i=0; i < recentlyPlayedPlaylists.total; i++){
+                                            playlists = recentlyPlayedPlaylists;
                                             playlistUris.add(recentlyPlayedPlaylists.items[i].uri);
-                                            if (i == 0) {
-                                                playlist0.setText(recentlyPlayedPlaylists.items[i].title);
-                                                playlist0.setOnClickListener(new View.OnClickListener() {
+                                            playlistImages.add(recentlyPlayedPlaylists.items[i].imageUri);
+                                            playlistTitles.add(recentlyPlayedPlaylists.items[i].title);
+                                            if(i == (recentlyPlayedPlaylists.total - 1)){
+                                                PlaylistAdapter playlistAdapter = new PlaylistAdapter(PlaylistSelectionActivity.this, R.layout.row_item, playlists);
+                                                playlistGrid.setAdapter(playlistAdapter);
+//                                                ArrayAdapter<String> titleAdapter = new ArrayAdapter<String>(this, R.layout.row_item, R.id.playlistTitle, playlistTitles);
+//                                                playlistGrid.setAdapter(titleAdapter);
+                                                playlistGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                     @Override
-                                                    public void onClick(View v) {
-                                                        playPlaylist(recentlyPlayedPlaylists.items[0].uri);
-                                                            }
-                                                    });
-                                                playlist0.setVisibility(View.VISIBLE);
-                                            }
-                                            else if (i == 1) {
-                                                playlist1.setText(recentlyPlayedPlaylists.items[i].title);
-                                                playlist1.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        playPlaylist(recentlyPlayedPlaylists.items[1].uri);
+                                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                     playPlaylist((String) playlistUris.get(position));
                                                     }
                                                 });
-                                                playlist1.setVisibility(View.VISIBLE);
-                                            }
-                                            else if (i == 2) {
-                                                playlist2.setText(recentlyPlayedPlaylists.items[i].title);
-                                                playlist2.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        playPlaylist(recentlyPlayedPlaylists.items[2].uri);
-                                                    }
-                                                });
-                                                playlist2.setVisibility(View.VISIBLE);
-                                            }
-                                            else if (i == 3) {
-                                                playlist3.setText(recentlyPlayedPlaylists.items[i].title);
-                                                playlist3.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        playPlaylist(recentlyPlayedPlaylists.items[3].uri);
-                                                    }
-                                                });
-                                                playlist3.setVisibility(View.VISIBLE);
                                             }
                                         }
                                     }
