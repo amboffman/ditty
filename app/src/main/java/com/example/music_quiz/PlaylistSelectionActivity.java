@@ -115,51 +115,9 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                     mSpotifyAppRemote.getContentApi().getChildrenOfItem(playlistRecommendations.items[0], 20, 0)
                             .setResultCallback(
                                     recentlyPlayedPlaylists -> {
-//                                        for(int i=0; i < 4; i++){
-//                                            playlistUris.add(recentlyPlayedPlaylists.items[i].uri);
-//                                            if (i == 0) {
-//                                                playlist0.setText(recentlyPlayedPlaylists.items[i].title);
-//                                                playlist0.setOnClickListener(new View.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(View v) {
-//                                                        playPlaylist(recentlyPlayedPlaylists.items[0].uri);
-//                                                            }
-//                                                    });
-//                                                playlist0.setVisibility(View.VISIBLE);
-//                                            }
-//                                            else if (i == 1) {
-//                                                playlist1.setText(recentlyPlayedPlaylists.items[i].title);
-//                                                playlist1.setOnClickListener(new View.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(View v) {
-//                                                        playPlaylist(recentlyPlayedPlaylists.items[1].uri);
-//                                                    }
-//                                                });
-//                                                playlist1.setVisibility(View.VISIBLE);
-//                                            }
-//                                            else if (i == 2) {
-//                                                playlist2.setText(recentlyPlayedPlaylists.items[i].title);
-//                                                playlist2.setOnClickListener(new View.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(View v) {
-//                                                        playPlaylist(recentlyPlayedPlaylists.items[2].uri);
-//                                                    }
-//                                                });
-//                                                playlist2.setVisibility(View.VISIBLE);
-//                                            }
-//                                            else if (i == 3) {
-//                                                playlist3.setText(recentlyPlayedPlaylists.items[i].title);
-//                                                playlist3.setOnClickListener(new View.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(View v) {
-//                                                        playPlaylist(recentlyPlayedPlaylists.items[3].uri);
-//                                                    }
-//                                                });
-//                                                playlist3.setVisibility(View.VISIBLE);
-//                                            }
-//                                        }
                                         for(int i=0; i < recentlyPlayedPlaylists.total; i++){
                                             playlists = recentlyPlayedPlaylists;
+                                            playlistUris.add(recentlyPlayedPlaylists.items[i].uri);
                                             mSpotifyAppRemote.getImagesApi().getImage(recentlyPlayedPlaylists.items[i].imageUri)
                                                     .setResultCallback(image->{
                                                         playlistImages.add(image);
@@ -174,8 +132,6 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                                                 });
                                                         }
                                                     });
-//                                            if(i == (recentlyPlayedPlaylists.total - 1)){
-//                                            }
                                         }
 
                                     }
