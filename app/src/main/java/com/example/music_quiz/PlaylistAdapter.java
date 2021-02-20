@@ -1,6 +1,9 @@
 package com.example.music_quiz;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,11 +67,13 @@ import java.util.ArrayList;
 public class PlaylistAdapter extends ArrayAdapter{
 
     ListItems playlists;
+    ArrayList<Bitmap> playlistImages;
     int custom_layout_id;
 
-    public PlaylistAdapter(@NonNull Context context, int resource, ListItems playlistsList) {
+    public PlaylistAdapter(@NonNull Context context, int resource, ListItems playlistsList, ArrayList playlistImages) {
         super(context, resource);
         playlists = playlistsList;
+        this.playlistImages = playlistImages;
         custom_layout_id = resource;
     }
     @Override public int getCount()
@@ -85,6 +90,8 @@ public class PlaylistAdapter extends ArrayAdapter{
         }
         ImageView playlistImage = convertView.findViewById(R.id.playlistImage);
         TextView playlistTitle = convertView.findViewById(R.id.playlistTitle);
+        Log.d("Image Object", String.valueOf(playlistImages.get(position)));
+        playlistImage.setImageBitmap(playlistImages.get(position));
         ListItem playlist = playlists.items[position];
         playlistTitle.setText(playlist.title);
         return convertView;

@@ -20,16 +20,17 @@
 
         <ImageView
             android:id="@+id/playlistImage"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             tools:srcCompat="@tools:sample/avatars" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/playlistTitle"
+            android:gravity="center"
             android:layout_marginTop="5dp"
             android:text="Title"
-            android:textSize="25sp"
+            android:textSize="18sp"
             />
 
     </LinearLayout>

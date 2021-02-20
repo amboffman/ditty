@@ -8,11 +8,25 @@
     android:background="@drawable/gradient_animation"
     tools:context=".MainActivity">
 
+    <GridView
+        android:id="@+id/playlists"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="120dp"
+        android:background="@color/colorTransparent"
+        android:numColumns="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Playlist_Selection">
+
+    </GridView>
+
     <Button
         android:id="@+id/playlist3"
         android:layout_width="409dp"
         android:layout_height="52dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:backgroundTint="#2196F3"
         tools:layout_editor_absoluteX="52dp"
         tools:layout_editor_absoluteY="157dp" />
@@ -21,7 +35,7 @@
         android:id="@+id/playlist2"
         android:layout_width="409dp"
         android:layout_height="52dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:backgroundTint="#2196F3"
         tools:layout_editor_absoluteX="52dp"
         tools:layout_editor_absoluteY="157dp" />
@@ -30,7 +44,7 @@
         android:id="@+id/playlist1"
         android:layout_width="409dp"
         android:layout_height="52dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:backgroundTint="#2196F3"
         tools:layout_editor_absoluteX="52dp"
         tools:layout_editor_absoluteY="157dp" />
@@ -39,30 +53,10 @@
         android:id="@+id/playlist0"
         android:layout_width="409dp"
         android:layout_height="52dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:backgroundTint="#2196F3"
         tools:layout_editor_absoluteX="52dp"
         tools:layout_editor_absoluteY="157dp" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/playlistsArea"
-        android:layout_width="307dp"
-        android:layout_height="417dp"
-        app:cardBackgroundColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <GridView
-            android:id="@+id/playlists"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/light_blue_900"
-            android:numColumns="2">
-
-        </GridView>
-    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/Playlist_Selection"
@@ -73,9 +67,10 @@
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.095" />
+        app:layout_constraintVertical_bias="0.072" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
