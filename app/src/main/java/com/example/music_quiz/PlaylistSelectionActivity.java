@@ -112,7 +112,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     private void fetchPlaylists(){
         mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
                 .setResultCallback(playlistRecommendations -> {
-                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(playlistRecommendations.items[0], 20, 0)
+                    mSpotifyAppRemote.getContentApi().getChildrenOfItem(playlistRecommendations.items[0], 6, 0)
                             .setResultCallback(
                                     recentlyPlayedPlaylists -> {
                                         for(int i=0; i < recentlyPlayedPlaylists.total; i++){
