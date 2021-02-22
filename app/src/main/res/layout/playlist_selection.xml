@@ -17,46 +17,12 @@
         android:numColumns="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Playlist_Selection">
+        app:layout_constraintTop_toBottomOf="@+id/Playlist_Selection"
+        app:layout_constraintVertical_bias="1.0">
 
     </GridView>
-
-    <Button
-        android:id="@+id/playlist3"
-        android:layout_width="409dp"
-        android:layout_height="52dp"
-        android:visibility="invisible"
-        app:backgroundTint="#2196F3"
-        tools:layout_editor_absoluteX="52dp"
-        tools:layout_editor_absoluteY="157dp" />
-
-    <Button
-        android:id="@+id/playlist2"
-        android:layout_width="409dp"
-        android:layout_height="52dp"
-        android:visibility="invisible"
-        app:backgroundTint="#2196F3"
-        tools:layout_editor_absoluteX="52dp"
-        tools:layout_editor_absoluteY="157dp" />
-
-    <Button
-        android:id="@+id/playlist1"
-        android:layout_width="409dp"
-        android:layout_height="52dp"
-        android:visibility="invisible"
-        app:backgroundTint="#2196F3"
-        tools:layout_editor_absoluteX="52dp"
-        tools:layout_editor_absoluteY="157dp" />
-
-    <Button
-        android:id="@+id/playlist0"
-        android:layout_width="409dp"
-        android:layout_height="52dp"
-        android:visibility="invisible"
-        app:backgroundTint="#2196F3"
-        tools:layout_editor_absoluteX="52dp"
-        tools:layout_editor_absoluteY="157dp" />
 
     <TextView
         android:id="@+id/Playlist_Selection"
@@ -72,5 +38,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.072" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

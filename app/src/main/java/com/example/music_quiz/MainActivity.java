@@ -1,17 +1,22 @@
 package com.example.music_quiz;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -155,13 +160,20 @@ upgradeToPremium();
         TextView errorInfo = (TextView) findViewById(R.id.info);
         errorInfo.setText("Please log into the Spotify app.");
         Button spotifyLoginButton = (Button) findViewById(R.id.actionButton0);
+        TextView spotifyAttribution = (TextView) findViewById(R.id.spotifyAttribution);
+        ImageView spotifyLogo = (ImageView) findViewById(R.id.spotifyLogo);
         spotifyLoginButton.setBackgroundResource(R.color.emerald);
         spotifyLoginButton.setText("Spotify Login");
         spotifyLoginButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 if (launchIntent != null) {
-                    startActivity(launchIntent);//null pointer check in case package name was not found
+                    Pair[] pairs = new Pair[2];
+                    pairs[0] = new Pair<View, String>(spotifyAttribution, "attributionTextTransition");
+                    pairs[1] = new Pair<View, String>(spotifyLogo, "spotifyLogoTransition");
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
+                    startActivity(launchIntent, options.toBundle());//null pointer check in case package name was not found
                 }
             }
         });

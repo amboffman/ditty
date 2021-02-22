@@ -35,10 +35,6 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     public static final String EXTRA_MODE= "com.example.music_quiz.MODE";
     private boolean endlessMode;
     GridView playlistGrid;
-    Button playlist0;
-    Button playlist1;
-    Button playlist2;
-    Button playlist3;
 
     Connection connection = new Connection();
 
@@ -63,14 +59,6 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        playlist0 = (Button) findViewById(R.id.playlist0);
-        playlist1 = (Button) findViewById(R.id.playlist1);
-        playlist2 = (Button) findViewById(R.id.playlist2);
-        playlist3 = (Button) findViewById(R.id.playlist3);
-        playlist0.setVisibility(View.GONE);
-        playlist1.setVisibility(View.GONE);
-        playlist2.setVisibility(View.GONE);
-        playlist3.setVisibility(View.GONE);
     }
 
     @Override
