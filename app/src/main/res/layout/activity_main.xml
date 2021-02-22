@@ -54,8 +54,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:background="@color/emerald"
-                android:text="Start Game" />
+                android:background="@color/light_blue_600"
+                android:text="Start Game"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/info"
@@ -68,8 +69,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:background="@color/emerald"
-                android:text="Start Game" />
+                android:background="@color/light_blue_600"
+                android:text="Start Game"
+                android:textColor="#FFFFFF" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
