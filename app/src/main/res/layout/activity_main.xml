@@ -6,15 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_animation"
+    android:transitionName="backgroundTransition"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/Playlist_Selection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="monospace"
         android:gravity="center"
-        android:text="Music Quiz"
+        android:text="Ditty"
         android:textColor="@color/white"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -38,7 +39,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.571">
+        app:layout_constraintVertical_bias="0.571"
+        android:transitionName="cardTransition">
 
         <LinearLayout
             android:id="@+id/action_buttons"

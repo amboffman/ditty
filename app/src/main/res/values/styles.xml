@@ -2,7 +2,6 @@
 
     <style name="Widget.Theme.Musicquiz.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
-        <item name="android:windowActivityTransitions">true</item>
     </style>
 
     <style name="Widget.Theme.Musicquiz.ButtonBar.Fullscreen" parent="">

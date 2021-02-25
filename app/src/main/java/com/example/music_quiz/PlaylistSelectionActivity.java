@@ -104,7 +104,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                             .setResultCallback(
                                     recentlyPlayedPlaylists -> {
                                         for(int i=0; i < recentlyPlayedPlaylists.total; i++){
-                                            playlists = recentlyPlayedPlaylists;
+                                            playlists = recentlyPlayedPlaylists;;
                                             playlistUris.add(recentlyPlayedPlaylists.items[i].uri);
                                             mSpotifyAppRemote.getImagesApi().getImage(recentlyPlayedPlaylists.items[i].imageUri)
                                                     .setResultCallback(image->{
