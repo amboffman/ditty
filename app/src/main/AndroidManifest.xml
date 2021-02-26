@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.music_quiz">
+    package="com.music.ditty">
 
     <queries>
         <package android:name="com.spotify.music" />
@@ -15,16 +15,16 @@
         android:theme="@style/Theme.Musicquiz"
         >
         <activity
-            android:name=".PlaylistSelectionActivity"
+            android:name="ditty.example.music_quiz.PlaylistSelectionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".GameActivity"
+        <activity android:name="ditty.example.music_quiz.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"  />
         <activity
-            android:name=".EndGameActivity"
+            android:name="ditty.example.music_quiz.EndGameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_end_game"
             android:theme="@style/Theme.Musicquiz.Fullscreen" />
-        <activity android:name=".MainActivity">
+        <activity android:name="ditty.example.music_quiz.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

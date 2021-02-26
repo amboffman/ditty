@@ -1,13 +1,14 @@
 plugins {
     id 'com.android.application'
 }
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.music_quiz"
+        applicationId "com.music.ditty"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
@@ -53,4 +54,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation project(':spotify-app-remote')
     implementation "com.google.code.gson:gson:2.8.5"
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

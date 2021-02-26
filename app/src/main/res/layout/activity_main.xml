@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_animation"
     android:transitionName="backgroundTransition"
-    tools:context=".MainActivity">
+    tools:context="ditty.example.music_quiz.MainActivity">
 
     <TextView
         android:id="@+id/Playlist_Selection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="monospace"
+        android:fontFamily="sans-serif-smallcaps"
         android:gravity="center"
         android:text="Ditty"
         android:textColor="@color/white"
