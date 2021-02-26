@@ -62,7 +62,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 Log.d("Quiz Connection:", "Successful");
-                mSpotifyAppRemote = connection.getSpotifyRemote();
+                mSpotifyAppRemote = connection.spotifyRemote;
                 fetchPlaylists();
             }
 

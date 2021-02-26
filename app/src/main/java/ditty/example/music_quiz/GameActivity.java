@@ -169,7 +169,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSuccess() {
                 Log.d("Quiz Connection:", "Successful");
-                mSpotifyAppRemote = connection.getSpotifyRemote();
+                mSpotifyAppRemote = connection.spotifyRemote;
                 connected();
             }
 
