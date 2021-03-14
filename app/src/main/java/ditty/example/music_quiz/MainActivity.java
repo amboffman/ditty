@@ -65,24 +65,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-    private void upgradeToPremium(){
-        String url = "https://www.spotify.com/us/premium/";
-
-        final Intent premiumIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    private void spotifyLogin(){
+        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.spotify.music");
         TextView errorInfo = (TextView) findViewById(R.id.info);
-        errorInfo.setText("Spotify Premium is required for this application.");
-        Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton0);
-        downloadSpotifyButton.setText("Upgrade to Spotify Premium");
-        downloadSpotifyButton.setOnClickListener(new View.OnClickListener() {
+        errorInfo.setText("Please log into the Spotify app.");
+        Button spotifyLoginButton = (Button) findViewById(R.id.actionButton0);
+        spotifyLoginButton.setText("Spotify Login");
+        spotifyLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (premiumIntent != null) {
-                    startActivity(premiumIntent);
+                if (launchIntent != null) {
+                    startActivity(launchIntent);
                 }
             }
         });
-        downloadSpotifyButton.setVisibility(View.VISIBLE);
+        spotifyLoginButton.setVisibility(View.VISIBLE);
     }
     private void downloadSpotify(){
         String url;
@@ -110,6 +107,26 @@ public class MainActivity extends AppCompatActivity {
         });
         downloadSpotifyButton.setVisibility(View.VISIBLE);
     }
+
+    private void upgradeToPremium(){
+        String url = "https://www.spotify.com/us/premium/";
+
+        final Intent premiumIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        TextView errorInfo = (TextView) findViewById(R.id.info);
+        errorInfo.setText("Spotify Premium is required for this application.");
+        Button downloadSpotifyButton = (Button) findViewById(R.id.actionButton0);
+        downloadSpotifyButton.setText("Upgrade to Spotify Premium");
+        downloadSpotifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (premiumIntent != null) {
+                    startActivity(premiumIntent);
+                }
+            }
+        });
+        downloadSpotifyButton.setVisibility(View.VISIBLE);
+    }
+
     private void qualifyPlayer(){
         Button challengeModeButton = (Button) findViewById(R.id.actionButton0);
         challengeModeButton.setText("Challenge Mode");
@@ -133,22 +150,7 @@ public class MainActivity extends AppCompatActivity {
         endlessModeButton.setVisibility(View.VISIBLE);
     }
 
-    private void spotifyLogin(){
-        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.spotify.music");
-        TextView errorInfo = (TextView) findViewById(R.id.info);
-        errorInfo.setText("Please log into the Spotify app.");
-        Button spotifyLoginButton = (Button) findViewById(R.id.actionButton0);
-        spotifyLoginButton.setText("Spotify Login");
-        spotifyLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (launchIntent != null) {
-                    startActivity(launchIntent);
-                }
-            }
-        });
-        spotifyLoginButton.setVisibility(View.VISIBLE);
-    }
+
     private void hideButtons(){
         Button actionButton = (Button) findViewById(R.id.actionButton0);
         actionButton.setVisibility(View.GONE);
