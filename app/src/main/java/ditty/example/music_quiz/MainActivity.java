@@ -23,22 +23,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "com.example.music_quiz.START";
     public static final String EXTRA_MESSAGE_MODE = "com.example.music_quiz.MODE";
-    public boolean endlessMode = false;
-    private  ConstraintLayout layout;
-    private CardView card;
+    protected boolean endlessMode = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().getDecorView()
                 .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        layout = findViewById(R.id.main_layout);
-        card = findViewById(R.id.cardView);
-        layout.setBackgroundResource(R.drawable.gradient_animation);
-        AnimationDrawable animDrawable = (AnimationDrawable) layout.getBackground();
-        animDrawable.setEnterFadeDuration(10);
-        animDrawable.setExitFadeDuration(5000);
-        animDrawable.start();
+        GradientBackground background = new GradientBackground(findViewById(R.id.main_layout));
+        background.getGradientBackground();
         Button actionButton = (Button) findViewById(R.id.actionButton0);
         actionButton.setVisibility(View.GONE);
         Button actionButton2 = (Button) findViewById(R.id.actionButton1);
@@ -50,17 +43,7 @@ public class MainActivity extends AppCompatActivity {
         Intent playlistSelectionActivity = new Intent(this, PlaylistSelectionActivity.class);
         playlistSelectionActivity.putExtra(EXTRA_MESSAGE, "start");
         playlistSelectionActivity.putExtra(EXTRA_MESSAGE_MODE, endlessMode);
-        Pair[] pairs = new Pair[2];
-        pairs[0] = new Pair<View, String>(layout, "backgroundTransition");
-        pairs[1] = new Pair<View, String>(card, "cardTransition");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Apply activity transition
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
-        startActivity(playlistSelectionActivity, options.toBundle());
-        } else {
-            // Swap without transition
         startActivity(playlistSelectionActivity);
-        }
     }
 
     @Override
@@ -188,4 +171,5 @@ upgradeToPremium();
     protected void onDestroy() {
         super.onDestroy();
     }
+
 }

@@ -37,12 +37,8 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
         setContentView(R.layout.playlist_selection);
         getWindow().getDecorView()
                 .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        ConstraintLayout layout = findViewById(R.id.playlistSelectionScreen);
-        layout.setBackgroundResource(R.drawable.gradient_animation);
-        AnimationDrawable animDrawable = (AnimationDrawable) layout.getBackground();
-        animDrawable.setEnterFadeDuration(10);
-        animDrawable.setExitFadeDuration(5000);
-        animDrawable.start();
+        GradientBackground background = new GradientBackground(findViewById(R.id.playlistSelectionScreen));
+        background.getGradientBackground();
         playlistGrid = findViewById(R.id.playlists);
 
 
