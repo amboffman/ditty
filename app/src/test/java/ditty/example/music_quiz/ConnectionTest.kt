@@ -10,7 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class ConnectionTest {
     @Mock
-    var mConnectionCallback: ConnectionCallback? = null
+    lateinit var mConnectionCallback: ConnectionCallback;
 
     @Mock
     var mContext: Context? = null
@@ -21,6 +21,6 @@ class ConnectionTest {
 
     @Test
     fun connectionSuccessCalls() {
-        tConnection.connectSpotify(mContext, mConnectionCallback)
+
     }
 }
