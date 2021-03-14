@@ -29,8 +29,6 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     private boolean endlessMode;
     GridView playlistGrid;
 
-    Connection connection = new Connection();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +44,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        Connection connection = new Connection();
         // Set the connection parameters
         connection.connectSpotify(this, new ConnectionCallback() {
             @Override
@@ -68,15 +67,6 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
         Intent mainActivity = new Intent(this, MainActivity.class);
         startActivity(mainActivity);
     }
-    public void playPlaylist (String playlistURI){
-            // Do something in response to button
-            Intent gameActivity = new Intent(this, GameActivity.class);
-            gameActivity.putExtra(EXTRA_PLAYLIST_URI, playlistURI);
-            gameActivity.putExtra(EXTRA_MODE, endlessMode);
-            startActivity(gameActivity);
-    };
-
-
 
     private void fetchPlaylists(){
         mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
@@ -85,20 +75,20 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                             .setResultCallback(
                                     recentlyPlayedPlaylists -> {
                                         for(int i=0; i < recentlyPlayedPlaylists.total; i++){
-                                            playlists = recentlyPlayedPlaylists;;
+                                            playlists = recentlyPlayedPlaylists;
                                             playlistUris.add(recentlyPlayedPlaylists.items[i].uri);
                                             mSpotifyAppRemote.getImagesApi().getImage(recentlyPlayedPlaylists.items[i].imageUri)
                                                     .setResultCallback(image->{
                                                         playlistImages.add(image);
                                                         if(playlistImages.size() == (recentlyPlayedPlaylists.total -1) ){
-                                                PlaylistAdapter playlistAdapter = new PlaylistAdapter(PlaylistSelectionActivity.this, R.layout.row_item, playlists, playlistImages);
-                                                playlistGrid.setAdapter(playlistAdapter);
-                                                playlistGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                    @Override
-                                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                     playPlaylist((String) playlistUris.get(position));
-                                                    }
-                                                });
+                                                            PlaylistAdapter playlistAdapter = new PlaylistAdapter(PlaylistSelectionActivity.this, R.layout.row_item, playlists, playlistImages);
+                                                            playlistGrid.setAdapter(playlistAdapter);
+                                                            playlistGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                            @Override
+                                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                             playPlaylist((String) playlistUris.get(position));
+                                                            }
+                                                          });
                                                         }
                                                     });
                                         }
@@ -108,6 +98,16 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
                 });
 
     }
+
+    private void playPlaylist (String playlistURI){
+        // Do something in response to button
+        Intent gameActivity = new Intent(this, GameActivity.class);
+        gameActivity.putExtra(EXTRA_PLAYLIST_URI, playlistURI);
+        gameActivity.putExtra(EXTRA_MODE, endlessMode);
+        startActivity(gameActivity);
+    };
+
+
     @Override
     protected void onPause() {
         super.onPause();

@@ -23,15 +23,14 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             tools:srcCompat="@tools:sample/avatars" />
+
         <TextView
+            android:id="@+id/playlistTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/playlistTitle"
-            android:gravity="center"
             android:layout_marginTop="5dp"
-            android:text="Title"
-            android:textSize="18sp"
-            />
+            android:gravity="center"
+            android:textSize="18sp" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
