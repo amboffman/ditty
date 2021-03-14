@@ -25,7 +25,7 @@ class Connection {
         SpotifyAppRemote.connect(context, connectionParams, object : ConnectionListener {
             override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
                 spotifyRemote = spotifyAppRemote
-                Log.d("Connection", "Connected! Yay!")
+                Log.d("Connection", "Connected")
                 // Now you can start interacting with App Remote
                 checkSpotifyConditions(cb)
             }
