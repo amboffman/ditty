@@ -40,14 +40,7 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
         GradientBackground background = new GradientBackground(findViewById(R.id.playlistSelectionScreen));
         background.getGradientBackground();
         playlistGrid = findViewById(R.id.playlists);
-
-
         endlessMode = getIntent().getExtras().getBoolean(MainActivity.EXTRA_MESSAGE_MODE);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -77,7 +70,6 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     }
     public void playPlaylist (String playlistURI){
             // Do something in response to button
-        Log.d("PLAYING", String.valueOf(playlistURI));
             Intent gameActivity = new Intent(this, GameActivity.class);
             gameActivity.putExtra(EXTRA_PLAYLIST_URI, playlistURI);
             gameActivity.putExtra(EXTRA_MODE, endlessMode);
@@ -119,12 +111,6 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mSpotifyAppRemote.disconnect(mSpotifyAppRemote);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
         mSpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
