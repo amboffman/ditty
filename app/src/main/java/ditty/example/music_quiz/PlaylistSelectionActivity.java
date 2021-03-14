@@ -20,10 +20,6 @@ import java.util.ArrayList;
 
 public class PlaylistSelectionActivity extends AppCompatActivity {
     private SpotifyAppRemote mSpotifyAppRemote;
-    private ListItems playlists;
-    public ArrayList playlistUris = new ArrayList();
-    private ArrayList playlistTitles = new ArrayList();
-    private  ArrayList<Bitmap> playlistImages = new ArrayList();
     public static final String EXTRA_PLAYLIST_URI = "com.example.music_quiz.PLAYLISTURI";
     public static final String EXTRA_MODE= "com.example.music_quiz.MODE";
     private boolean endlessMode;
@@ -69,24 +65,25 @@ public class PlaylistSelectionActivity extends AppCompatActivity {
     }
 
     private void fetchPlaylists(){
+        Playlist playlists = new Playlist();
         mSpotifyAppRemote.getContentApi().getRecommendedContentItems("DEFAULT")
                 .setResultCallback(playlistRecommendations -> {
                     mSpotifyAppRemote.getContentApi().getChildrenOfItem(playlistRecommendations.items[0], 6, 0)
                             .setResultCallback(
                                     recentlyPlayedPlaylists -> {
                                         for(int i=0; i < recentlyPlayedPlaylists.total; i++){
-                                            playlists = recentlyPlayedPlaylists;
-                                            playlistUris.add(recentlyPlayedPlaylists.items[i].uri);
+                                            playlists.setPlaylists(recentlyPlayedPlaylists);
+                                            playlists.addPlaylistUri(recentlyPlayedPlaylists.items[i].uri);
                                             mSpotifyAppRemote.getImagesApi().getImage(recentlyPlayedPlaylists.items[i].imageUri)
                                                     .setResultCallback(image->{
-                                                        playlistImages.add(image);
-                                                        if(playlistImages.size() == (recentlyPlayedPlaylists.total -1) ){
-                                                            PlaylistAdapter playlistAdapter = new PlaylistAdapter(PlaylistSelectionActivity.this, R.layout.row_item, playlists, playlistImages);
+                                                        playlists.addPlaylistImage(image);
+                                                        if(playlists.getPlaylistImages().size() == (recentlyPlayedPlaylists.total -1) ){
+                                                            PlaylistAdapter playlistAdapter = new PlaylistAdapter(PlaylistSelectionActivity.this, R.layout.row_item, playlists.getPlaylists(), playlists.getPlaylistImages());
                                                             playlistGrid.setAdapter(playlistAdapter);
                                                             playlistGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                             @Override
                                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                             playPlaylist((String) playlistUris.get(position));
+                                                             playPlaylist((String) playlists.getPlaylistUris().get(position));
                                                             }
                                                           });
                                                         }
