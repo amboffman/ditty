@@ -131,12 +131,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("CYCLE", "Started");
-    }
-
-    @Override
     protected void onResume(){
         super.onResume();
         Log.d("CYCLE", "Resumed");
@@ -207,7 +201,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     private void prepareNewRound(){
-        Log.d("Round Type", "New");
             mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState()
                     .setEventCallback(playerState -> {
                         spotifyPlayerState = playerState;
@@ -215,10 +208,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             answers.add(playerState.track.name);
                             song = playerState.track;
                             if (answers.size() < 4) {
-                                Log.d("A < 4 Skip", "Called");
                                 mSpotifyAppRemote.getPlayerApi().skipNext();
                             } else {
-                                startMs = nextLong(new Random(playerState.track.duration), ((playerState.track.duration - 30000)));
+                                startMs = randomLong(new Random(playerState.track.duration), ((playerState.track.duration - 30000)));
                                 mSpotifyAppRemote.getPlayerApi().seekToRelativePosition(startMs)
                                         .setResultCallback(start -> {
                                             mSpotifyAppRemote.getPlayerApi().pause();
@@ -230,7 +222,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void resumeRound(){
-        Log.d("Round Type", "Resume");
         mSpotifyAppRemote.getPlayerApi().queue(song.uri)
                 .setResultCallback(queued->{
                     mSpotifyAppRemote.getPlayerApi().skipNext()
@@ -347,7 +338,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         roundTimer.start();
 
     }
-    public long nextLong(Random rng, long n) {
+    public long randomLong(Random rng, long n) {
         // error checking and 2^x checking removed for simplicity.
         long bits, val;
         do {
