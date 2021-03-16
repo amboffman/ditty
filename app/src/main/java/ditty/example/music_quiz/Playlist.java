@@ -2,7 +2,6 @@ package ditty.example.music_quiz;
 
 import android.graphics.Bitmap;
 
-import com.spotify.protocol.types.Item;
 import com.spotify.protocol.types.ListItems;
 
 import java.util.ArrayList;

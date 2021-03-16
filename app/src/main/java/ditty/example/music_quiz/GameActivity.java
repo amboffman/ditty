@@ -93,35 +93,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         endlessMode = getIntent().getExtras().getBoolean(PlaylistSelectionActivity.EXTRA_MODE);
-        incorrect = 0;
         playlistUri = getIntent().getStringExtra(PlaylistSelectionActivity.EXTRA_PLAYLIST_URI);
-        answerButton0 = (Button)findViewById(R.id.answer0);
-        answerButton0.setOnClickListener(this);
-        answerButton0.setVisibility(View.GONE);
-
+        hideAnswerButtons();
         roundTime = (ProgressBar)findViewById(R.id.roundTime);
 
-        answerButton1 = (Button)findViewById(R.id.answer1);
-        answerButton1.setOnClickListener(this);
-        answerButton1.setVisibility(View.GONE);
-
-
-        answerButton2 = (Button)findViewById(R.id.answer2);
-        answerButton2.setOnClickListener(this);
-        answerButton2.setVisibility(View.GONE);
-
-        answerButton3 = (Button)findViewById(R.id.answer3);
-        answerButton3.setOnClickListener(this);
-        answerButton3.setVisibility(View.GONE);
-
-        incorrect0 = (TextView) findViewById(R.id.incorrect0);
-        incorrect1 = (TextView) findViewById(R.id.incorrect1);
-        incorrect2 = (TextView) findViewById(R.id.incorrect2);
-
         if(endlessMode){
-            incorrect0.setVisibility(View.GONE);
-            incorrect1.setVisibility(View.GONE);
-            incorrect2.setVisibility(View.GONE);
+            hideIncorrectIcons();
         }
         Button end_game_button = (Button)findViewById(R.id.endGameButton);
         end_game_button.setOnClickListener(new View.OnClickListener() {
@@ -608,4 +585,35 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
       super.onDestroy();
       Log.d("CYCLE", "Destroyed");
     };
+
+    private void hideAnswerButtons(){
+        answerButton0 = (Button)findViewById(R.id.answer0);
+        answerButton0.setOnClickListener(this);
+        answerButton0.setVisibility(View.GONE);
+
+
+        answerButton1 = (Button)findViewById(R.id.answer1);
+        answerButton1.setOnClickListener(this);
+        answerButton1.setVisibility(View.GONE);
+
+
+        answerButton2 = (Button)findViewById(R.id.answer2);
+        answerButton2.setOnClickListener(this);
+        answerButton2.setVisibility(View.GONE);
+
+        answerButton3 = (Button)findViewById(R.id.answer3);
+        answerButton3.setOnClickListener(this);
+        answerButton3.setVisibility(View.GONE);
+
+    }
+
+    private void hideIncorrectIcons(){
+        incorrect0 = (TextView) findViewById(R.id.incorrect0);
+        incorrect1 = (TextView) findViewById(R.id.incorrect1);
+        incorrect2 = (TextView) findViewById(R.id.incorrect2);
+        incorrect0.setVisibility(View.GONE);
+        incorrect1.setVisibility(View.GONE);
+        incorrect2.setVisibility(View.GONE);
+
+    }
 }
